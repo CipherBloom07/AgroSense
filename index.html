@@ -15,9 +15,60 @@
 .command-overlay{position:fixed;inset:0;z-index:60;display:none;align-items:flex-start;justify-content:center;padding:14vh 18px 24px;background:#020d0bd9;backdrop-filter:blur(12px)}.command-overlay.open{display:flex;animation:appear .16s ease}.command-box{width:min(590px,100%);border:1px solid #3b7958;border-radius:20px;background:#0b261f;box-shadow:0 30px 100px #0009;overflow:hidden}.command-search{display:flex;gap:12px;align-items:center;padding:17px;border-bottom:1px solid #244a38}.command-search input{width:100%;border:0;outline:0;background:transparent;color:#f1fbf4;font-size:15px}.command-list{padding:8px;max-height:48vh;overflow:auto}.command-item{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px;border:1px solid transparent;border-radius:11px;background:transparent;color:#e8f8ed;text-align:left;cursor:pointer}.command-item:hover,.command-item:focus-visible{background:#153d2e;border-color:#386e4f;outline:none}.command-item small{color:#91b7a2}.command-foot{padding:11px 15px;border-top:1px solid #244a38;color:#88a996;font-size:10px}.toast{max-width:min(430px,calc(100vw - 30px));box-shadow:0 14px 45px #0006}.skiplink{position:fixed;left:12px;top:8px;z-index:100;transform:translateY(-150%);background:var(--lime);color:#08291f;padding:10px 14px;border-radius:10px;font-weight:800}.skiplink:focus{transform:none}
 @media(max-width:650px){.utilitybtn{padding:8px}.utilitybtn span{display:none}.topright{gap:7px}.topbar{padding:0 14px}.command-overlay{padding-top:9vh}.hero{min-height:390px;padding:24px}.hero h1{font-size:clamp(33px,9vw,47px)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Theme system: token-driven light palette, shared by every module. */
+:root{color-scheme:dark;--bg:#071b18;--panel:#0d2923;--panel2:#10362b;--line:#21493b;--green:#16b978;--lime:#b9f27c;--blue:#32c9e8;--ink:#f1fbf4;--muted:#9bb8aa;--orange:#ffbd5a;--red:#ff747a;--shadow:0 22px 60px #0003}
+html[data-theme="light"]{color-scheme:light;--bg:#f2f7f3;--panel:#ffffff;--panel2:#e8f3eb;--line:#d3e3d7;--green:#087e52;--lime:#b5e96f;--blue:#087fa1;--ink:#153328;--muted:#5d7668;--orange:#a85a00;--red:#bd3444;--shadow:0 18px 45px #173b2712}
+html[data-theme="light"] body{background:radial-gradient(ellipse at 80% 0%,#cbeed8 0,transparent 36%),var(--bg)}
+html[data-theme="light"] .sidebar{background:#fafffb;border-color:var(--line)}
+html[data-theme="light"] .brandname small,html[data-theme="light"] .navlabel{color:#668573}
+html[data-theme="light"] .nav button{color:#496b59}
+html[data-theme="light"] .nav button:hover{background:#e8f3eb;color:#153328}
+html[data-theme="light"] .nav button.active{background:linear-gradient(100deg,#d8f2df,#edf9ef);border-color:#b9dec4;color:#12563b}
+html[data-theme="light"] .nav button.active .navicon{background:#d2edda;color:#087e52}
+html[data-theme="light"] .sidefoot{background:linear-gradient(145deg,#e4f5e8,#f7fcf8);border-color:#cce5d3}
+html[data-theme="light"] .sidefoot p{color:#496b59}
+html[data-theme="light"] .topbar{background:#f7fbf8e8;border-color:#d8e6dc}
+html[data-theme="light"] .crumb{color:#567363}
+html[data-theme="light"] .utilitybtn{background:#fff;color:#234a37;border-color:#cfe0d4}
+html[data-theme="light"] .utilitybtn:hover{background:#eaf6ed;border-color:#72b68a}
+html[data-theme="light"] .status{background:#e6f4e9;color:#38654b;border-color:#c9e3d0}
+html[data-theme="light"] .avatar{background:#d9efdf;color:#17633f}
+html[data-theme="light"] .panel,html[data-theme="light"] .metric,html[data-theme="light"] .module{background:var(--panel);border-color:var(--line);box-shadow:0 8px 25px #173b2708}
+html[data-theme="light"] .panel p,html[data-theme="light"] .modulebody p{color:#60796b}
+html[data-theme="light"] .modulebody h3,html[data-theme="light"] .metric strong,html[data-theme="light"] .panel h2,html[data-theme="light"] .panel h3{color:#183b2b}
+html[data-theme="light"] .pill{background:#e5f4e9;color:#17633f;border-color:#c5e3ce}
+html[data-theme="light"] input,html[data-theme="light"] select,html[data-theme="light"] textarea{background:#fbfefc;color:#173b2b;border-color:#c9ded0}
+html[data-theme="light"] input::placeholder,html[data-theme="light"] textarea::placeholder{color:#81978a}
+html[data-theme="light"] .btn.secondary{background:#edf6ef;color:#1c563a;border-color:#d0e5d6}
+html[data-theme="light"] .bottomnav{background:#fbfefcf0;border-color:#d1e3d7}
+html[data-theme="light"] .bottomnav button{color:#668573}
+html[data-theme="light"] .bottomnav button.active{color:#087e52}
+html[data-theme="light"] .command-overlay{background:#18382db8}
+html[data-theme="light"] .command-box{background:#fff;border-color:#c8dfcf}
+html[data-theme="light"] .command-search{border-color:#e0ebe3}
+html[data-theme="light"] .command-search input,html[data-theme="light"] .command-item{color:#173b2b}
+html[data-theme="light"] .command-item:hover,html[data-theme="light"] .command-item:focus-visible{background:#edf7ef;border-color:#cfe5d5}
+html[data-theme="light"] .command-item small,html[data-theme="light"] .command-foot{color:#658171}
+html[data-theme="light"] .command-foot{border-color:#e0ebe3}
+html[data-theme="light"] .tablewrap{border-color:#d3e3d7}
+html[data-theme="light"] .tablewrap th{background:#e8f3eb;color:#315d45}
+html[data-theme="light"] .tablewrap td{border-color:#e0ebe3}
+html[data-theme="light"] .tinyline,html[data-theme="light"] .foot{color:#708b7b}
+html[data-theme="light"] .result{background:#f1f8f2;border-color:#d3e7d8}
+html[data-theme="light"] .result p{color:#284e39!important}
+html[data-theme="light"] .photoheader:after{background:linear-gradient(0deg,#f2f7f3 0%,#f2f7f3dd 20%,transparent 100%)}
+html[data-theme="light"] .hero:after{background:linear-gradient(90deg,#061d17ed 0%,#09281eb8 47%,#09281e22 100%)}
+html[data-theme="light"] .hero h1,html[data-theme="light"] .hero p,html[data-theme="light"] .hero .eyebrow{color:#f4fff6}
+html[data-theme="light"] .hero:before{opacity:.45}
+html[data-theme="light"] .empty{color:#698272}
+@media(max-width:900px){.topright .status{display:none}.topright{gap:6px}.content{min-width:0}.panel,.module,.metric{min-width:0}}
+@media(max-width:480px){.topbar{padding:0 10px}.crumb{font-size:10px}.topright{gap:5px}.utilitybtn{padding:7px 8px;font-size:10px}.theme-toggle #themeLabel{display:none}.status{display:none!important}.avatar{width:30px;height:30px}.content{padding-left:10px;padding-right:10px}.modulegrid{grid-template-columns:1fr 1fr}.modulebody h3{font-size:12px}.modulebody p{font-size:10px;min-height:72px}.metrics{gap:7px}.metric strong{font-size:21px}.hero h1{font-size:clamp(30px,8.5vw,39px)}.heroactions{gap:8px}.heroactions .btn{min-width:0;font-size:11px}.command-overlay{padding-left:10px;padding-right:10px}.command-search{padding:12px}}
+@media(max-width:350px){.crumb{max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.topright{gap:4px}.utilitybtn{padding:6px}.modulegrid{grid-template-columns:1fr}.modulebody p{min-height:0}.heroactions{flex-direction:column}.heroactions .btn{width:100%}}
+@media(orientation:landscape) and (max-height:520px) and (max-width:900px){.bottomnav{padding-top:3px}.bottomnav button{gap:0;padding:2px}.hero{min-height:270px}.command-overlay{padding-top:4vh}}
 </style></head><body><a class="skiplink" href="#mainContent">Skip to main content</a><div class="shell">
 <aside class="sidebar"><div class="brand"><svg class="brandmark" viewBox="0 0 100 100" aria-label="AgroSense leaf and water logo"><defs><linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#00634b"/><stop offset=".55" stop-color="#15a653"/><stop offset="1" stop-color="#8bd21d"/></linearGradient><linearGradient id="drop" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#064dbb"/><stop offset="1" stop-color="#16d9fa"/></linearGradient></defs><path d="M48 5C33 28 15 43 15 61a34 34 0 0 0 67 7C70 77 46 70 37 55 27 39 36 23 48 5Z" fill="url(#leaf)"/><path d="M38 57C41 39 58 23 79 16 75 37 63 54 45 62" fill="none" stroke="#d8ffb1" stroke-width="3" stroke-linecap="round"/><path d="M53 30C47 43 38 53 38 63a16 16 0 0 0 32 0C70 53 61 43 53 30Z" fill="url(#drop)" stroke="#b4f8ff" stroke-width="1.5"/><path d="M79 34h9l5-6h4M81 43h8l5-5h3" stroke="#23cf89" stroke-width="3" fill="none" stroke-linecap="round"/></svg><div class="brandname">Agro<span>Sense</span><small>by CipherBloom</small></div></div><div class="navlabel">Intelligence workspace</div><nav class="nav" id="sideNav"><button class="active" data-view="overview"><span class="navicon">⌂</span> Command centre</button><button data-view="plant"><span class="navicon">✿</span> Plant Doctor</button><button data-view="water"><span class="navicon">◉</span> Water intelligence</button><button data-view="climate"><span class="navicon">☼</span> Climate & risk</button><button data-view="gis"><span class="navicon">⌖</span> GIS & fields</button><button data-view="assets"><span class="navicon">⚙</span> Infrastructure</button><button data-view="ops"><span class="navicon">▤</span> Operations centre</button><button data-view="evidence"><span class="navicon">▧</span> Data & evidence</button></nav><div class="sidefoot"><span class="liveflag"><i class="pulse"></i> PROTOTYPE ENVIRONMENT</span><p>Smarter decisions. Healthier crops. Sustainable tomorrow.</p></div></aside>
-<main class="main" id="mainContent"><header class="topbar"><div class="crumb">AGROSENSE <span style="color:#426957">/</span> <b id="crumb">Command centre</b></div><div class="topright"><button class="utilitybtn" id="commandBtn" type="button" aria-label="Open command palette" title="Command palette (Ctrl or ⌘ + K)">⌘K <span>Command</span></button><button class="utilitybtn" id="exportBtn" type="button" title="Export local demo records as JSON">⇩ <span>Export</span></button><span class="status"><i></i> Demo data · no live feeds</span><div class="avatar" title="CipherBloom prototype">CB</div></div></header><div class="content">
+<main class="main" id="mainContent"><header class="topbar"><div class="crumb">AGROSENSE <span style="color:#426957">/</span> <b id="crumb">Command centre</b></div><div class="topright"><button class="utilitybtn" id="commandBtn" type="button" aria-label="Open command palette" title="Command palette (Ctrl or ⌘ + K)">⌘K <span>Command</span></button><button class="utilitybtn theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Switch theme"><span class="theme-symbol" id="themeSymbol">☼</span><span id="themeLabel">Light mode</span></button><button class="utilitybtn" id="exportBtn" type="button" title="Export local demo records as JSON">⇩ <span>Export</span></button><span class="status"><i></i> Demo data · no live feeds</span><div class="avatar" title="CipherBloom prototype">CB</div></div></header><div class="content">
 <section class="view active" id="view-overview"><div class="hero"><img class="heroimg" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=85" alt="Golden sunlight over a productive agricultural field"><div class="herocontent"><div class="eyebrow">Field intelligence platform · Zimbabwe-first concept</div><h1>Listen to the soil.<br><em>Understand the field.</em></h1><p>One intelligent workspace for crop-health observations, irrigation planning, climate preparedness and field operations — built to turn farm signals into clearer decisions.</p><div class="heroactions"><button class="btn" onclick="navigate('plant')">✿ Start a crop check ↗</button><button class="btn secondary" onclick="navigate('water')">◉ Plan irrigation</button></div></div></div>
 <div class="metrics"><div class="metric"><div class="metrichead">DEMO FIELD RECORDS <span class="metricicon">⌖</span></div><strong>08</strong><small>Illustrative sample records</small></div><div class="metric"><div class="metrichead">WATER PLAN <span class="metricicon">◉</span></div><strong>1,250 <small>m³/day</small></strong><small>Example estimate only</small></div><div class="metric"><div class="metrichead">OPEN TASKS <span class="metricicon">▤</span></div><strong id="taskCount">02</strong><small>Local demo task board</small></div><div class="metric"><div class="metrichead">DATA CONNECTION <span class="metricicon">⌁</span></div><strong style="font-size:22px">Baseline</strong><small>Weather & sensors not connected</small></div></div>
 <div class="layout"><div class="panel"><div class="panelhead"><div><div class="eyebrow">Explore the platform</div><h2 style="margin-top:5px">Your field, one connected view.</h2><p>Choose a module to see how the proposed system could work.</p></div><span class="pill">8 modules</span></div><div class="modulegrid">
@@ -38,6 +89,16 @@
 <div class="foot">AGROSENSE BY CIPHERBLOOM · SMARTER DECISIONS. HEALTHIER CROPS. SUSTAINABLE TOMORROW.</div></div></main>
 <nav class="bottomnav" id="bottomNav"><button class="active" data-view="overview"><span>⌂</span>Home</button><button data-view="plant"><span>✿</span>Plant</button><button data-view="water"><span>◉</span>Water</button><button data-view="gis"><span>⌖</span>Map</button><button data-view="ops"><span>▤</span>Tasks</button></nav><div class="toast" id="toast" role="status" aria-live="polite"></div><div class="command-overlay" id="commandOverlay" role="dialog" aria-modal="true" aria-label="Command palette"><div class="command-box"><div class="command-search"><span>⌕</span><input id="commandSearch" type="search" placeholder="Jump to a module or action…" autocomplete="off" aria-label="Search commands"><button class="utilitybtn" id="closeCommand" type="button">Esc</button></div><div class="command-list" id="commandList"></div><div class="command-foot">Navigate with your mouse or keyboard · Ctrl/⌘ + K to open · Esc to close</div></div></div></div>
 <script>
+
+ // Theme preference: explicit choice persists in this browser; default remains dark.
+ (function(){
+  const root=document.documentElement,button=document.getElementById("themeToggle"),symbol=document.getElementById("themeSymbol"),label=document.getElementById("themeLabel");
+  let saved="dark";try{saved=localStorage.getItem("agrosense.theme")||"dark"}catch(_){}
+  function applyTheme(theme){const light=theme==="light";root.dataset.theme=light?"light":"dark";if(button){button.setAttribute("aria-label",light?"Switch to dark theme":"Switch to light theme");button.setAttribute("title",light?"Switch to dark theme":"Switch to light theme")}if(symbol)symbol.textContent=light?"☾":"☼";if(label)label.textContent=light?"Dark mode":"Light mode";const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",light?"#f2f7f3":"#052d25");try{localStorage.setItem("agrosense.theme",light?"light":"dark")}catch(_){}}
+  applyTheme(saved==="light"?"light":"dark");
+  button?.addEventListener("click",()=>applyTheme(root.dataset.theme==="light"?"dark":"light"));
+ })();
+
 const labels={overview:"Command centre",plant:"Plant Doctor",water:"Water intelligence",climate:"Climate & risk",gis:"GIS & fields",assets:"Infrastructure",ops:"Operations centre",evidence:"Data & evidence"};
 function navigate(name){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="view-"+name));document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));document.getElementById("crumb").textContent=labels[name]||labels.overview;window.scrollTo({top:0,behavior:"smooth"})}
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>navigate(b.dataset.view)));
