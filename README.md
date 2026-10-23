@@ -14,7 +14,7 @@ AgroSense is a responsive, local-first front-end prototype for an agricultural a
 
 - **Command centre:** illustrative overview, module navigation and sample field signals.
 - **Plant Doctor:** crop, growth-stage, symptom, soil and distribution inputs with cautious rule-based guidance.
-- **Water intelligence:** net and gross daily irrigation-volume estimates based on entered area, depth and efficiency.
+- **Water intelligence:** net and gross daily irrigation-volume estimates based on entered area, depth and efficiency; save, review and delete named field plans in this browser.
 - **Climate & risk:** readiness checklist that can be saved locally.
 - **GIS & fields:** clearly labelled schematic fields and asset pins (not actual geospatial coordinates).
 - **Infrastructure:** local maintenance fault reports.
@@ -22,7 +22,7 @@ AgroSense is a responsive, local-first front-end prototype for an agricultural a
 - **Data & evidence:** source/provenance states and explicit capability limitations.
 - **Command palette:** use **Ctrl/⌘ + K** to jump between modules; **Esc** closes it.
 - **JSON export:** export current local prototype records from the top bar or command palette.
-- **Local persistence:** tasks, fault reports, checklist states and water inputs are saved in this browser where local storage is available.
+- **Local persistence:** tasks, fault reports, saved field water plans, checklist states and water inputs are saved in this browser where local storage is available. This is not a shared database.
 - **Accessibility and resilience:** keyboard focus states, skip link, reduced-motion preference support, semantic labels and responsive layouts.
 
 ## Design notes
@@ -34,7 +34,7 @@ AgroSense is a responsive, local-first front-end prototype for an agricultural a
 
 ## Prototype limitations — read before presenting as production-ready
 
-This is **not yet a production agricultural system**. Figures and field records are illustrative. Local browser storage is not a shared database, and exported JSON is not a server backup. The prototype has no secure authentication, server-side authorisation, backend API, database, live weather, sensor telemetry, satellite data, real GIS coordinates, team notifications or irrigation controls. The Plant Doctor provides preliminary prompts, not a confirmed diagnosis. Agricultural actions should be verified with reliable local sources and qualified extension officers.
+This is **not yet a production agricultural system**. Figures and field records are illustrative. Local browser storage is not a shared database, and exported JSON is not a server backup. The prototype has no secure authentication, server-side authorisation, backend API or shared database, live weather, sensor telemetry, satellite data, real GIS coordinates, team notifications or irrigation controls. The Plant Doctor provides preliminary prompts, not a confirmed diagnosis. Agricultural actions should be verified with reliable local sources and qualified extension officers.
 
 The interface includes a vector logo mark inspired by the supplied CipherBloom / AgroSense visual identity. The exact supplied raster artwork is not yet bundled as a repository asset. Before final brand approval, add the original logo file as an asset and use it in the header and browser favicon.
 
