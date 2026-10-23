@@ -34,7 +34,7 @@ AgroSense is a responsive, local-first front-end prototype for an agricultural a
 
 ## Prototype limitations — read before presenting as production-ready
 
-This is **not yet a production agricultural system**. Figures and field records are illustrative. Local browser storage is not a shared database, and exported JSON is not a server backup. The prototype has no secure authentication, server-side authorisation, backend API or shared database, live weather, sensor telemetry, satellite data, real GIS coordinates, team notifications or irrigation controls. The Plant Doctor provides preliminary prompts, not a confirmed diagnosis. Agricultural actions should be verified with reliable local sources and qualified extension officers.
+This is **not yet a production agricultural system**. Figures and field records are illustrative. The published static front end still uses browser-local storage; it is not yet connected to the backend or Neon database. The backend API scaffold exists in `backend/`, but authentication and role-based authorisation are not implemented. **Do not deploy the API publicly or connect real user data until authentication/authorisation and further security testing are added.** Live weather, sensor telemetry, satellite data, real GIS coordinates, team notifications and irrigation controls are not implemented. The Plant Doctor provides preliminary prompts, not a confirmed diagnosis. Agricultural actions should be verified with reliable local sources and qualified extension officers.
 
 The interface includes a vector logo mark inspired by the supplied CipherBloom / AgroSense visual identity. The exact supplied raster artwork is not yet bundled as a repository asset. Before final brand approval, add the original logo file as an asset and use it in the header and browser favicon.
 
@@ -57,3 +57,13 @@ The interface includes a vector logo mark inspired by the supplied CipherBloom /
 - `DATABASE_DESIGN.md` explains the model, water-estimation formula, integrity rules and safe setup steps.
 - These files define the database design; they do **not** mean the live GitHub Pages prototype is connected to PostgreSQL. A secure backend API is still required before records can be shared or stored in a server database.
 - Never commit database passwords or connection strings to this public repository.
+
+
+## Backend API (Stage 3 — initial scaffold)
+
+- Backend code is in `backend/server.js`; package configuration is in `backend/package.json`.
+- Initial endpoints: `GET /api/health`, `GET/POST /api/schemes`, `GET/POST /api/fields`, and `GET/POST /api/water-plans`.
+- The API uses PostgreSQL parameterised queries, input validation, Helmet security headers, CORS origin allow-listing and rate limiting.
+- Copy `backend/.env.example` to `backend/.env` for local development and put the Neon connection string in that local file only. Never commit `.env` or paste credentials into public files.
+- The backend has not yet been connected to the published front end or verified against the live Neon database. Run and test it locally first.
+- **Important:** authentication and role-based authorisation are not implemented yet. Treat this as a local development scaffold only; do not expose it as a public API until access control and security tests are completed.
