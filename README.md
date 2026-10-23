@@ -50,3 +50,10 @@ The interface includes a vector logo mark inspired by the supplied CipherBloom /
 8. Add automated tests for calculations, validation, accessibility, persistence and critical workflows.
 9. Test on low-cost Android devices, small screens, keyboard-only navigation and limited mobile-data connections.
 10. Deploy through a repeatable build/release process and add monitoring only after the backend exists.
+
+## Database design (Stage 2)
+
+- `schema.sql` defines the PostgreSQL tables, relationships, validation constraints and indexes for schemes, fields, water plans, crop observations, infrastructure faults and maintenance tasks.
+- `DATABASE_DESIGN.md` explains the model, water-estimation formula, integrity rules and safe setup steps.
+- These files define the database design; they do **not** mean the live GitHub Pages prototype is connected to PostgreSQL. A secure backend API is still required before records can be shared or stored in a server database.
+- Never commit database passwords or connection strings to this public repository.
