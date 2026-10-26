@@ -20,8 +20,16 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DATABASE_URL.includes("neon.tech") ? { rejectUnauthorized: true } : undefined,
   max: 5,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000
+  // Retire idle connections sooner to reduce reuse of stale Neon connections.
+  idleTimeoutMillis: 10000,
+  // Allow time for Neon to wake a suspended compute instance.
+  connectionTimeoutMillis: 30000,
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 10000
+});
+
+pool.on("error", (error) => {
+  console.error("Unexpected idle PostgreSQL client error:", error.message, error.code || "");
 });
 
 app.disable("x-powered-by");
@@ -161,7 +169,11 @@ app.post("/api/water-plans", async (req, res, next) => {
 app.use((req, res) => res.status(404).json({ error: "Endpoint not found." }));
 app.use((error, _req, res, _next) => {
   if (error.message === "Origin is not allowed by AgroSense API.") return res.status(403).json({ error: "This origin is not allowed." });
-  console.error("API request failed:", error.message);
+  console.error("API request failed:", {
+    message: error.message,
+    code: error.code || null,
+    detail: error.detail || null
+  });
   res.status(500).json({ error: "An unexpected server error occurred." });
 });
 
