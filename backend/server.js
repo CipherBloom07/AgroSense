@@ -168,7 +168,7 @@ app.post("/api/water-plans", async (req, res, next) => {
 
 app.delete("/api/water-plans/:id", async (req, res, next) => {
   const id = req.params.id;
-  if (!/^\\d+$/.test(String(id)) || Number(id) <= 0) return res.status(400).json({ error: "A valid water plan ID is required." });
+  if (!/^\d+$/.test(String(id)) || Number(id) <= 0) return res.status(400).json({ error: "A valid water plan ID is required." });
   try {
     const result = await pool.query("DELETE FROM water_plans WHERE id = $1 RETURNING id", [Number(id)]);
     if (!result.rows.length) return res.status(404).json({ error: "Water plan not found." });
