@@ -39,7 +39,7 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
     return callback(new Error("Origin is not allowed by AgroSense API."));
   },
-  methods: ["GET", "POST", "OPTIONS"],
+  methods: ["GET", "POST", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 }));
 app.use(express.json({ limit: "20kb" }));
@@ -164,6 +164,16 @@ app.post("/api/water-plans", async (req, res, next) => {
     if (error.code === "23503") return res.status(400).json({ error: "The selected field does not exist." });
     next(error);
   }
+});
+
+app.delete("/api/water-plans/:id", async (req, res, next) => {
+  const id = req.params.id;
+  if (!/^\\d+$/.test(String(id)) || Number(id) <= 0) return res.status(400).json({ error: "A valid water plan ID is required." });
+  try {
+    const result = await pool.query("DELETE FROM water_plans WHERE id = $1 RETURNING id", [Number(id)]);
+    if (!result.rows.length) return res.status(404).json({ error: "Water plan not found." });
+    res.json({ data: { id: result.rows[0].id, deleted: true } });
+  } catch (error) { next(error); }
 });
 
 app.use((req, res) => res.status(404).json({ error: "Endpoint not found." }));
