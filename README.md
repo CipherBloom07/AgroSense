@@ -4,17 +4,21 @@
 
 AgroSense is a responsive, local-first front-end prototype for an agricultural and irrigation decision-support platform. Its visual direction uses a forest-green field-intelligence workspace, lime highlights, agricultural photography, animated transitions and mobile-first navigation.
 
-## Run it
+## Run it locally
 
-- Open `index.html` in a modern browser.
-- To publish with GitHub Pages, open **Settings → Pages**, select **Deploy from a branch**, choose branch **main** and folder **/(root)**, then save.
-- After deployment completes, the expected public URL is `https://cipherbloom07.github.io/AgroSense/`.
+1. In a terminal, open `backend/` and run `npm install` once.
+2. Copy `backend/.env.example` to `backend/.env` and add your PostgreSQL connection string to the local `.env` file. Never commit `.env` or share its contents.
+3. Start the API with `npm start` and leave that terminal running. The API listens on `http://localhost:5000` by default.
+4. Open the repository root in VS Code and use Live Server to open `index.html` at `http://127.0.0.1:5500` or `http://localhost:5500`.
+5. In Water Intelligence, check the database connection indicator and use **Refresh records** to reload saved water plans.
+
+Opening `index.html` directly as a file or through the public GitHub Pages URL does not connect it to the local database. To publish the frontend with GitHub Pages, open **Settings → Pages**, select **Deploy from a branch**, choose branch **main** and folder **/(root)**, then save. The expected URL is `https://cipherbloom07.github.io/AgroSense/`, but its backend URL must be configured separately before database features can work there.
 
 ## Current capabilities
 
 - **Command centre:** illustrative overview, module navigation and sample field signals.
 - **Plant Doctor:** crop, growth-stage, symptom, soil and distribution inputs with cautious rule-based guidance.
-- **Water intelligence:** net and gross daily irrigation-volume estimates based on entered area, depth and efficiency; save, review and delete named field plans in this browser.
+- **Water intelligence:** net and gross daily irrigation-volume estimates based on entered area, depth and efficiency; when the local API is running, save, review, refresh and delete named field plans in PostgreSQL.
 - **Climate & risk:** readiness checklist that can be saved locally.
 - **GIS & fields:** clearly labelled schematic fields and asset pins (not actual geospatial coordinates).
 - **Infrastructure:** local maintenance fault reports.
@@ -22,7 +26,7 @@ AgroSense is a responsive, local-first front-end prototype for an agricultural a
 - **Data & evidence:** source/provenance states and explicit capability limitations.
 - **Command palette:** use **Ctrl/⌘ + K** to jump between modules; **Esc** closes it.
 - **JSON export:** export current local prototype records from the top bar or command palette.
-- **Local persistence:** tasks, fault reports, saved field water plans, checklist states and water inputs are saved in this browser where local storage is available. This is not a shared database.
+- **Local persistence:** operations tasks, fault reports, checklist states and water inputs use browser storage. Water plans are retrieved from PostgreSQL through the local API; they are not stored as browser-only records.
 - **Accessibility and resilience:** keyboard focus states, skip link, reduced-motion preference support, semantic labels and responsive layouts.
 
 ## Design notes
@@ -34,7 +38,7 @@ AgroSense is a responsive, local-first front-end prototype for an agricultural a
 
 ## Prototype limitations — read before presenting as production-ready
 
-This is **not yet a production agricultural system**. Figures and field records are illustrative. The published static front end still uses browser-local storage; it is not yet connected to the backend or Neon database. The backend API scaffold exists in `backend/`, but authentication and role-based authorisation are not implemented. **Do not deploy the API publicly or connect real user data until authentication/authorisation and further security testing are added.** Live weather, sensor telemetry, satellite data, real GIS coordinates, team notifications and irrigation controls are not implemented. The Plant Doctor provides preliminary prompts, not a confirmed diagnosis. Agricultural actions should be verified with reliable local sources and qualified extension officers.
+This is **not yet a production agricultural system**. Figures and field records are illustrative. In local development, Water Intelligence reads and writes water plans through the PostgreSQL API. Plant Doctor observations are not yet persisted; infrastructure fault reports, operations tasks, climate checklist states and water inputs remain browser-local. The GitHub Pages frontend has no hosted API URL configured. Authentication and role-based authorisation are not implemented. **Do not deploy the API publicly or connect real user data until authentication/authorisation, hosted HTTPS configuration and further security testing are added.** Live weather, sensor telemetry, satellite data, real GIS coordinates, team notifications and irrigation controls are not implemented. The Plant Doctor provides preliminary prompts, not a confirmed diagnosis. Agricultural actions should be verified with reliable local sources and qualified extension officers.
 
 The interface includes a vector logo mark inspired by the supplied CipherBloom / AgroSense visual identity. The exact supplied raster artwork is not yet bundled as a repository asset. Before final brand approval, add the original logo file as an asset and use it in the header and browser favicon.
 
