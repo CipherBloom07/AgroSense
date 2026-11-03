@@ -71,7 +71,7 @@ html[data-theme="light"] .empty{color:#698272}
 .water-workspace{margin-top:22px}.water-workspace-nav{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px;padding:8px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
 .water-workspace-nav a{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border-radius:10px;color:var(--muted);text-decoration:none;font-size:11px;font-weight:800}
 .water-workspace-nav a:hover,.water-workspace-nav a:focus-visible{background:var(--panel2);color:var(--ink);outline:2px solid var(--lime);outline-offset:1px}
-.water-section{scroll-margin-top:95px;margin-top:16px}.water-section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.water-stat{border:1px solid var(--line);background:var(--panel2);border-radius:13px;padding:13px;min-width:0}.water-stat strong{display:block;font-size:20px;margin-top:4px}.water-stat small{color:var(--muted);font-size:10px}.water-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.water-output{min-height:42px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);font-size:12px;color:var(--ink);margin-top:12px}.water-source{font-size:10px;color:var(--muted);margin-top:8px}.water-meter{height:9px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px}.water-meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--lime));border-radius:99px;transition:width .3s}.water-chip{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:5px 8px;font-size:10px;color:var(--muted)}
+.water-section{scroll-margin-top:95px;margin-top:16px}.water-section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.water-stat{border:1px solid var(--line);background:var(--panel2);border-radius:13px;padding:13px;min-width:0}.water-stat strong{display:block;font-size:20px;margin-top:4px}.water-stat small{color:var(--muted);font-size:10px}.water-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.water-output{white-space:pre-line;min-height:42px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);font-size:12px;color:var(--ink);margin-top:12px}.water-source{font-size:10px;color:var(--muted);margin-top:8px}.water-meter{height:9px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px}.water-meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--lime));border-radius:99px;transition:width .3s}.water-chip{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:5px 8px;font-size:10px;color:var(--muted)}
 @media(max-width:700px){.water-workspace-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.water-workspace-nav a{justify-content:center;padding:10px 6px}.water-section-grid{grid-template-columns:1fr}.water-section{scroll-margin-top:75px}}
 </style></head><body><a class="skiplink" href="#mainContent">Skip to main content</a><div class="shell">
 <aside class="sidebar"><div class="brand"><svg class="brandmark" viewBox="0 0 100 100" aria-label="AgroSense leaf and water logo"><defs><linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#00634b"/><stop offset=".55" stop-color="#15a653"/><stop offset="1" stop-color="#8bd21d"/></linearGradient><linearGradient id="drop" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#064dbb"/><stop offset="1" stop-color="#16d9fa"/></linearGradient></defs><path d="M48 5C33 28 15 43 15 61a34 34 0 0 0 67 7C70 77 46 70 37 55 27 39 36 23 48 5Z" fill="url(#leaf)"/><path d="M38 57C41 39 58 23 79 16 75 37 63 54 45 62" fill="none" stroke="#d8ffb1" stroke-width="3" stroke-linecap="round"/><path d="M53 30C47 43 38 53 38 63a16 16 0 0 0 32 0C70 53 61 43 53 30Z" fill="url(#drop)" stroke="#b4f8ff" stroke-width="1.5"/><path d="M79 34h9l5-6h4M81 43h8l5-5h3" stroke="#23cf89" stroke-width="3" fill="none" stroke-linecap="round"/></svg><div class="brandname">Agro<span>Sense</span><small>by CipherBloom</small></div></div><div class="navlabel">Intelligence workspace</div><nav class="nav" id="sideNav"><button class="active" data-view="overview"><span class="navicon">⌂</span> Command centre</button><button data-view="plant"><span class="navicon">✿</span> Plant Doctor</button><button data-view="water"><span class="navicon">◉</span> Water intelligence</button><button data-view="climate"><span class="navicon">☼</span> Climate & risk</button><button data-view="gis"><span class="navicon">⌖</span> GIS & fields</button><button data-view="assets"><span class="navicon">⚙</span> Infrastructure</button><button data-view="ops"><span class="navicon">▤</span> Operations centre</button><button data-view="evidence"><span class="navicon">▧</span> Data & evidence</button></nav><div class="sidefoot"><span class="liveflag"><i class="pulse"></i> PROTOTYPE ENVIRONMENT</span><p>Smarter decisions. Healthier crops. Sustainable tomorrow.</p></div></aside>
@@ -140,6 +140,7 @@ html[data-theme="light"] .empty{color:#698272}
         <div class="field"><label for="cropArea">FIELD AREA (HECTARES)</label><input id="cropArea" type="number" min=".001" step=".1" placeholder="Use field area"></div>
       </div>
       <button class="btn tiny" type="button" id="calculateCropDemand">Estimate crop water demand ↗</button>
+      <div class="water-actions"><button class="utilitybtn" type="button" id="useForecastEto">Use latest forecast ET₀</button><button class="utilitybtn" type="button" id="usePlannerArea">Use planner field area</button><button class="utilitybtn" type="button" id="applyCropDemand">Use crop estimate in planner</button></div>
       <div class="result" id="cropDemandResult" aria-live="polite"><span class="tinyline">ESTIMATED NET CROP WATER NEED</span><strong id="cropNetDemand">—</strong><p id="cropDemandDetail">Enter ETo, Kc, effective rainfall and field area to calculate an indicative estimate.</p></div>
       <p class="water-source">Method: ETc = ETo × Kc; indicative net irrigation need = max(0, ETc − effective rainfall). Volume = net depth × area × 10. Use locally validated crop coefficients and account for soil, growth stage and irrigation method. This is not a prescription.</p>
     </div>
@@ -160,6 +161,7 @@ html[data-theme="light"] .empty{color:#698272}
         <div class="field"><label for="availableWater">AVAILABLE WATER (m³)</label><input id="availableWater" type="number" min="0" step=".1" placeholder="Enter measured available volume"></div>
         <div class="field"><label for="resourceDemand">PLANNED GROSS DEMAND (m³/day)</label><input id="resourceDemand" type="number" min="0" step=".1" placeholder="Can use current planner estimate"></div>
         <button class="utilitybtn" type="button" id="checkWaterBalanceBtn">Check water balance</button>
+        <button class="utilitybtn" type="button" id="usePlannerDemand">Use planner gross volume</button>
         <div class="water-output" id="waterBalanceOutput" aria-live="polite">Enter available water and planned demand.</div>
         <p class="water-source">Resource availability must be entered from a verified source or site measurement. AgroSense does not monitor reservoirs or pumps automatically.</p>
       </div>
@@ -306,4 +308,115 @@ renderTasks();calculateWater();
  document.querySelectorAll('.water-workspace-nav a').forEach(a=>a.addEventListener('click',()=>{const target=document.querySelector(a.getAttribute('href'));if(target)setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'start'}),0)}));
  updateAnalytics();
 })();
+
+/* Water Intelligence integration layer: connect the existing tools into one field assessment. */
+(function(){
+ const $=id=>document.getElementById(id);
+ const readNumber=id=>{const el=$(id);if(!el||el.value.trim()==="")return null;const n=Number(el.value);return Number.isFinite(n)?n:null};
+ const readStore=()=>{try{return JSON.parse(localStorage.getItem("agrosense.water-intelligence.v1")||"{}")}catch(_){return {}}};
+ const writeStore=(key,value)=>{try{const d=readStore();d[key]=value;localStorage.setItem("agrosense.water-intelligence.v1",JSON.stringify(d));return true}catch(_){return false}};
+ const show=(id,msg)=>{if($(id))$(id).textContent=msg};
+ const notifySafe=msg=>{if(typeof window.notify==="function")window.notify(msg)};
+ const valid=(n,min,max)=>n!==null&&n>=min&&(max===undefined||n<=max);
+ function recalcDemand(){
+   const eto=readNumber("etoValue"),kc=readNumber("kcValue"),rain=readNumber("effectiveRain"),area=readNumber("cropArea");
+   if(!valid(eto,0,30)||!valid(kc,0.01,2)||!valid(rain,0,100)||!valid(area,0.001)){
+     show("cropNetDemand","Check inputs");
+     show("cropDemandDetail","Enter ETo (0–30), Kc (greater than 0 up to 2), effective rainfall (0–100) and a positive field area.");
+     return null;
+   }
+   const etc=eto*kc,net=Math.max(0,etc-rain),volume=net*area*10;
+   const record={eto,kc,rain,area,etc,net,volume,calculatedAt:new Date().toISOString()};
+   show("cropNetDemand",net.toFixed(2)+" mm/day");
+   show("cropDemandDetail","ETc: "+etc.toFixed(2)+" mm/day · indicative net volume: "+volume.toFixed(2)+" m³/day. Effective rainfall is subtracted; losses and soil-water storage are not modelled.");
+   writeStore("cropDemand",record);
+   return record;
+ }
+ $("useForecastEto")?.addEventListener("click",()=>{
+   const w=readStore().weather,values=w?.daily?.et0_fao_evapotranspiration,dates=w?.daily?.time;
+   const eto=Array.isArray(values)?Number(values[0]):NaN;
+   if(!Number.isFinite(eto)){show("cropDemandDetail","No forecast ET₀ is available. Retrieve a forecast first.");return}
+   $("etoValue").value=eto.toFixed(2);
+   $("etoValue").dispatchEvent(new Event("change",{bubbles:true}));
+   const when=dates?.[0]||"first forecast day";
+   show("cropDemandDetail","Loaded forecast ET₀ of "+eto.toFixed(2)+" mm/day for "+when+". Enter a verified crop-stage Kc and effective rainfall, then calculate.");
+   notifySafe("Forecast ET₀ copied into crop demand.");
+ });
+ $("usePlannerArea")?.addEventListener("click",()=>{
+   const area=readNumber("area");
+   if(!valid(area,0.001)){notifySafe("Enter a valid field area in the irrigation planner first.");return}
+   $("cropArea").value=area;
+   $("cropArea").dispatchEvent(new Event("change",{bubbles:true}));
+   notifySafe("Planner field area copied to crop demand.");
+ });
+ $("applyCropDemand")?.addEventListener("click",()=>{
+   const result=recalcDemand();
+   if(!result)return;
+   $("area").value=result.area;
+   $("depth").value=result.net;
+   if(typeof window.calculateWater==="function")window.calculateWater();
+   $("area").dispatchEvent(new Event("change",{bubbles:true}));
+   $("depth").dispatchEvent(new Event("change",{bubbles:true}));
+   show("waterAdvice","Crop demand has been transferred to the irrigation planner. Review the planner's application efficiency and field assumptions before saving a plan.");
+   notifySafe("Crop estimate transferred to the irrigation planner.");
+ });
+ $("usePlannerDemand")?.addEventListener("click",()=>{
+   const area=readNumber("area"),depth=readNumber("depth"),eff=readNumber("efficiency");
+   if(!valid(area,0.001)||!valid(depth,0)||!valid(eff,1,100)){notifySafe("Calculate a valid planner estimate first.");return}
+   const gross=area*depth*10/(eff/100);
+   $("resourceDemand").value=gross.toFixed(2);
+   $("resourceDemand").dispatchEvent(new Event("change",{bubbles:true}));
+   notifySafe("Planner gross daily volume copied to water balance.");
+ });
+ // Restore the visible timestamp for a locally saved field observation.
+ const prior=readStore(),observation=prior.soilObservation;
+ if(observation?.recordedAt)show("soilSavedStatus","Last saved on this device: "+new Date(observation.recordedAt).toLocaleString()+". Source: user observation, not sensor telemetry.");
+ if(observation?.condition&&$("soilMoistureStatus"))$("soilMoistureStatus").value=observation.condition;
+ if(observation?.reading!==null&&observation?.reading!==undefined&&$("soilMoisturePercent"))$("soilMoisturePercent").value=observation.reading;
+ if(observation?.observation&&$("soilObservation"))$("soilObservation").value=observation.observation;
+ // Use the same calculation and stored result regardless of whether the original calculator or this bridge is invoked.
+ $("calculateCropDemand")?.addEventListener("click",recalcDemand);
+ // Capture this click before the earlier prototype listener so the advisory is a unified assessment.
+ $("generateWaterAdvice")?.addEventListener("click",event=>{
+   event.stopImmediatePropagation();
+   const d=readStore(),weather=d.weather,soil=$("soilMoistureStatus")?.value||"unknown";
+   const demand=d.cropDemand,eff=d.efficiency,balance=d.waterBalance,notes=[];
+   let missing=0,priority="Review required";
+   const weatherAge=weather?.retrievedAt?Date.now()-new Date(weather.retrievedAt).getTime():Infinity;
+   if(weather?.daily?.time?.length){
+     const rain=Number(weather.daily.precipitation_sum?.[0]);
+     const eto=Number(weather.daily.et0_fao_evapotranspiration?.[0]);
+     notes.push("WEATHER — Forecast retrieved "+new Date(weather.retrievedAt).toLocaleString()+" for "+Number(weather.latitude).toFixed(3)+", "+Number(weather.longitude).toFixed(3)+". First-day rainfall: "+(Number.isFinite(rain)?rain+" mm":"not supplied")+"; ET₀: "+(Number.isFinite(eto)?eto+" mm/day":"not supplied")+". Forecast is not measured rainfall.");
+     if(weatherAge>36*60*60*1000)notes.push("Check the forecast again: this saved forecast is older than 36 hours.");
+   }else{notes.push("WEATHER — No forecast loaded. Retrieve a forecast for the actual field coordinates.");missing++}
+   const savedSoil=d.soilObservation;
+   if(soil==="wet") {notes.push("SOIL — Wet / waterlogged was selected. Inspect drainage and root-zone conditions; do not increase irrigation based only on a calendar.");priority="Field inspection recommended"}
+   else if(soil==="dry"||soil==="slightly-dry")notes.push("SOIL — "+soil+" was recorded. Confirm at root depth and consider crop stage before changing irrigation.");
+   else {notes.push("SOIL — No confirmed soil condition. Record a field inspection or calibrated measurement.");missing++}
+   if(savedSoil?.recordedAt)notes.push("Observation timestamp: "+new Date(savedSoil.recordedAt).toLocaleString()+".");
+   if(demand){
+     notes.push("CROP DEMAND — ETc "+Number(demand.etc).toFixed(2)+" mm/day; indicative net irrigation need "+Number(demand.net).toFixed(2)+" mm/day; net volume "+Number(demand.volume).toFixed(1)+" m³/day over "+Number(demand.area).toFixed(2)+" ha. Kc is user-supplied and must match crop and growth stage.");
+   }else{notes.push("CROP DEMAND — Not calculated. Supply ET₀, a verified crop-stage Kc, effective rainfall and field area.");missing++}
+   if(eff){
+     notes.push("DELIVERY — Entered delivery efficiency "+Number(eff.pct).toFixed(1)+"%; measured difference "+(Number(eff.supplied)-Number(eff.delivered)).toFixed(1)+" m³. Check measurement method and inspect for losses.");
+     if(eff.pct<70)priority="Investigate delivery losses";
+   }else{notes.push("DELIVERY — No measured supplied-versus-delivered volume comparison. Efficiency remains unknown.");missing++}
+   if(balance){
+     notes.push("WATER SUPPLY — Entered supply covers approximately "+Number(balance.days).toFixed(1)+" day(s) at "+Number(balance.demand).toFixed(1)+" m³/day.");
+     if(balance.days<1){priority="Water supply shortfall";notes.push("Action: verify available volume and planned demand, then review the irrigation schedule with the responsible field officer.");}
+   }else{notes.push("WATER SUPPLY — No verified available-water balance. Enter measured storage/source volume and compare it with the planner gross demand.");missing++}
+   const planArea=readNumber("area"),planDepth=readNumber("depth"),planEff=readNumber("efficiency");
+   if(demand&&planArea!==null&&planDepth!==null&&Math.abs(planArea-demand.area)>0.01)notes.push("CONSISTENCY CHECK — Crop-demand area ("+demand.area+" ha) differs from planner area ("+planArea+" ha). Align them before saving a plan.");
+   if(demand&&planDepth!==null&&Math.abs(planDepth-demand.net)>0.05)notes.push("CONSISTENCY CHECK — Planner depth ("+planDepth+" mm/day) differs from calculated net crop demand ("+demand.net.toFixed(2)+" mm/day). Use the transfer button if these refer to the same field and planning period.");
+   if(!Number.isFinite(planEff)||planEff<=0||planEff>100)notes.push("PLANNER — Application efficiency is invalid; correct it before calculating gross demand.");
+   if(missing===0&&priority==="Review required")priority="Inputs available — verify before scheduling";
+   const heading="ASSESSMENT STATUS: "+priority+"\nMissing / unverified input groups: "+missing+"\n\n";
+   show("waterAdvice",heading+notes.map((x,i)=>(i+1)+". "+x).join("\n")+"\n\nDECISION RULE: AgroSense combines the supplied values and highlights inconsistencies; it does not autonomously prescribe irrigation. Confirm local conditions and consult an agricultural extension officer.");
+   const output=$("waterAdvice");if(output)output.scrollIntoView({behavior:"smooth",block:"nearest"});
+ },true);
+ // Keep the saved-plan summary fresh when the database refresh completes.
+ const refresh=$("refreshPlansBtn");
+ refresh?.addEventListener("click",()=>setTimeout(()=>{if(typeof window.updateWaterAnalytics==="function")window.updateWaterAnalytics()},500));
+})();
+
 </script></body></html>
