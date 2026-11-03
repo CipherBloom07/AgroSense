@@ -648,10 +648,10 @@ renderTasks();calculateWater();
   text("waterNextDetail",missing.length?"Complete the next missing item to build a reliable field assessment.":"Review water availability and delivery efficiency before saving or acting on a plan.");
   const nextBtn=$("waterNextActionBtn");
   if(nextBtn){nextBtn.textContent=!complete?"Set up field":!weather?"Get weather":soil==="unknown"?"Record soil":!savedDemand?"Calculate demand":"Review water plan";nextBtn.dataset.target=!complete?"context":!weather?"conditions":soil==="unknown"?"conditions":!savedDemand?"demand":"efficiency";}
-  const plans=Array.isArray(window.waterPlans)?window.waterPlans:[];
-  const match=plans.find(p=>p.field===c.field&&p.scheme===c.scheme);
-  text("waterDashPlan",match?Number(match.gross).toLocaleString(undefined,{maximumFractionDigits:1})+" m³/day":"No saved plan for this field");
-  text("waterDashPlanDetail",match?"Saved estimate · "+(match.crop||c.crop)+" · "+(match.area||c.area)+" ha":"Save a plan in Water Planning to see its latest database record here.");
+  const savedRows=[...document.querySelectorAll("#savedPlans tbody tr")];
+  const match=savedRows.find(row=>{const cells=row.querySelectorAll("td");return cells.length>=4&&cells[0].textContent.includes(c.scheme)&&cells[0].textContent.includes(c.field)});
+  text("waterDashPlan",match?match.cells?.[3]?.textContent?.trim()||"Saved plan found":"No saved plan for this field");
+  text("waterDashPlanDetail",match?"Retrieved from the saved field-plan table. Confirm its date and assumptions before use.":"Save a plan in Water Planning to see its database record here.");
  }
  $("applyWaterContext")?.addEventListener("click",()=>{
   const c={scheme:value("waterContextScheme"),field:value("waterContextField"),crop:value("waterContextCrop"),area:number("waterContextArea")};
