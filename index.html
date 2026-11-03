@@ -138,6 +138,35 @@ html[data-theme="light"] .empty{color:#698272}
 .water-section[hidden]{display:none!important}
 .water-workspace-nav a:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
 @media(max-width:700px){.water-workspace-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.water-workspace-nav a{justify-content:flex-start;padding:10px 12px}.water-workspace-nav a:last-child{grid-column:span 2}.water-step-track{max-width:110px}}
+
+/* Functional Water Intelligence field console */
+.water-app-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin:12px 0 18px}
+.water-app-heading h2{font-size:clamp(24px,3vw,32px);margin:5px 0;letter-spacing:-.8px}
+.water-app-heading p{font-size:12px;color:var(--muted);margin:0}
+.water-context-panel{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:17px;margin-bottom:15px}
+.water-context-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}
+.water-context-title strong{display:block;font-size:13px}
+.water-context-title small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.water-context-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.water-context-grid .field{margin:0}
+.water-context-grid input,.water-context-grid select{width:100%;min-width:0}
+.water-context-actions{display:flex;align-items:center;gap:12px;margin-top:13px;flex-wrap:wrap}
+.water-context-actions span{font-size:10px;color:var(--muted)}
+.water-dashboard-grid{margin:0 0 14px}
+.water-dashboard-grid .water-stat{background:var(--panel);min-height:112px}
+.water-dashboard-grid .water-stat strong{font-size:20px}
+.water-dashboard-bottom{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.water-operation-card{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
+.water-operation-card strong{display:block;font-size:13px;margin:5px 0}
+.water-operation-card p{font-size:10px;color:var(--muted);margin:0;line-height:1.5}
+.water-operation-card button{flex:0 0 auto}
+.water-gallery-mini{display:grid;grid-template-columns:1fr minmax(180px,28%);overflow:hidden;border:1px solid var(--line);border-radius:15px;margin-top:14px;background:var(--panel)}
+.water-gallery-mini-copy{display:flex;flex-direction:column;justify-content:center;gap:7px;padding:17px}
+.water-gallery-mini-copy strong{font-size:13px;line-height:1.4}
+.water-gallery-mini-copy small{font-size:10px;color:var(--muted)}
+.water-gallery-mini img{width:100%;height:115px;object-fit:cover}
+@media(max-width:850px){.water-context-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.water-app-heading{align-items:flex-start;flex-direction:column}.water-dashboard-bottom{grid-template-columns:1fr}.water-operation-card{align-items:flex-start;flex-direction:column}.water-gallery-mini{grid-template-columns:1fr}.water-gallery-mini img{height:145px;grid-row:1}.water-context-grid{grid-template-columns:1fr 1fr}}
 </style></head><body><a class="skiplink" href="#mainContent">Skip to main content</a><div class="shell">
 <aside class="sidebar"><div class="brand"><svg class="brandmark" viewBox="0 0 100 100" aria-label="AgroSense leaf and water logo"><defs><linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#00634b"/><stop offset=".55" stop-color="#15a653"/><stop offset="1" stop-color="#8bd21d"/></linearGradient><linearGradient id="drop" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#064dbb"/><stop offset="1" stop-color="#16d9fa"/></linearGradient></defs><path d="M48 5C33 28 15 43 15 61a34 34 0 0 0 67 7C70 77 46 70 37 55 27 39 36 23 48 5Z" fill="url(#leaf)"/><path d="M38 57C41 39 58 23 79 16 75 37 63 54 45 62" fill="none" stroke="#d8ffb1" stroke-width="3" stroke-linecap="round"/><path d="M53 30C47 43 38 53 38 63a16 16 0 0 0 32 0C70 53 61 43 53 30Z" fill="url(#drop)" stroke="#b4f8ff" stroke-width="1.5"/><path d="M79 34h9l5-6h4M81 43h8l5-5h3" stroke="#23cf89" stroke-width="3" fill="none" stroke-linecap="round"/></svg><div class="brandname">Agro<span>Sense</span><small>by CipherBloom</small></div></div><div class="navlabel">Intelligence workspace</div><nav class="nav" id="sideNav"><button class="active" data-view="overview"><span class="navicon">⌂</span> Command centre</button><button data-view="plant"><span class="navicon">✿</span> Plant Doctor</button><button data-view="water"><span class="navicon">◉</span> Water intelligence</button><button data-view="climate"><span class="navicon">☼</span> Climate & risk</button><button data-view="gis"><span class="navicon">⌖</span> GIS & fields</button><button data-view="assets"><span class="navicon">⚙</span> Infrastructure</button><button data-view="ops"><span class="navicon">▤</span> Operations centre</button><button data-view="evidence"><span class="navicon">▧</span> Data & evidence</button></nav><div class="sidefoot"><span class="liveflag"><i class="pulse"></i> PROTOTYPE ENVIRONMENT</span><p>Smarter decisions. Healthier crops. Sustainable tomorrow.</p></div></aside>
 <main class="main" id="mainContent"><header class="topbar"><div class="crumb">AGROSENSE <span style="color:#426957">/</span> <b id="crumb">Command centre</b></div><div class="topright"><button class="utilitybtn" id="commandBtn" type="button" aria-label="Open command palette" title="Command palette (Ctrl or ⌘ + K)">⌘K <span>Command</span></button><button class="utilitybtn theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Switch theme"><span class="theme-symbol" id="themeSymbol">☼</span><span id="themeLabel">Light mode</span></button><button class="utilitybtn" id="exportBtn" type="button" title="Export local demo records as JSON">⇩ <span>Export</span></button><span class="status"><i></i> Demo data · no live feeds</span><div class="avatar" title="CipherBloom prototype">CB</div></div></header><div class="content">
@@ -170,42 +199,36 @@ html[data-theme="light"] .empty{color:#698272}
 <div class="water-workspace">
   <div class="panelhead"><div><h2>Water intelligence workspace</h2><p>Explore field conditions, crop demand, water efficiency and actionable insights without leaving this module.</p></div><span class="pill">8 connected functions</span></div>
   <section class="water-section water-dashboard" id="water-dashboard" role="tabpanel" aria-labelledby="water-tab-dashboard">
-    <div class="water-vicfalls-hero">
-      <div class="water-hero-copy">
-        <span class="water-hero-tag">AGROSENSE · ZIMBABWE WATER INTELLIGENCE</span>
-        <h2>Water shapes every harvest.</h2>
-        <p>Understand field conditions, estimate crop demand and plan water use with a clearer view of Zimbabwe's water landscape.</p>
-        <div class="water-hero-meta"><span>Featured resource</span><strong>Victoria Falls · Zambezi River</strong></div>
-      </div>
-      <div class="water-hero-caption">Mosi-oa-Tunya · “The Smoke That Thunders”</div>
+  <div class="water-app-heading">
+    <div><span class="water-kicker">WATER INTELLIGENCE</span><h2>Field operations</h2><p>One workspace to assess conditions, calculate demand and manage irrigation plans.</p></div>
+    <span class="water-chip" id="waterFieldStatus">No field selected</span>
+  </div>
+  <div class="water-context-panel">
+    <div class="water-context-title"><div><strong>Active field</strong><small>Set the field once. Its details carry through the water tools.</small></div><span class="water-live-dot"></span></div>
+    <div class="water-context-grid">
+      <div class="field"><label for="waterContextScheme">FARM / SCHEME</label><input id="waterContextScheme" maxlength="80" placeholder="e.g. Riverside Scheme"></div>
+      <div class="field"><label for="waterContextField">FIELD ID</label><input id="waterContextField" maxlength="60" placeholder="e.g. Field A-03"></div>
+      <div class="field"><label for="waterContextCrop">CROP</label><select id="waterContextCrop"><option value="">Select crop</option><option>Maize</option><option>Wheat</option><option>Sugar beans</option><option>Soya beans</option><option>Vegetables</option><option>Other</option></select></div>
+      <div class="field"><label for="waterContextArea">AREA (ha)</label><input id="waterContextArea" type="number" min="0.001" step="0.01" placeholder="e.g. 2.5"></div>
     </div>
-
-    <div class="water-section-heading">
-      <div><span class="water-kicker">YOUR ACTIVE FIELD</span><h2>Field snapshot</h2><p>A live summary of the information currently entered in this workspace.</p></div>
-      <span class="water-chip"><span class="water-live-dot"></span> Updates as inputs change</span>
-    </div>
-    <div class="water-dashboard-grid">
-      <div class="water-stat"><span class="water-stat-icon">⌖</span><small>FIELD AREA</small><strong id="waterDashArea">— ha</strong><small>From the irrigation planner</small></div>
-      <div class="water-stat"><span class="water-stat-icon">☀</span><small>REFERENCE ET₀</small><strong id="waterDashEto">— mm/day</strong><small>Forecast-derived when loaded</small></div>
-      <div class="water-stat"><span class="water-stat-icon">◉</span><small>CROP WATER DEMAND</small><strong id="waterDashEtc">— mm/day</strong><small>Calculated ETc estimate</small></div>
-      <div class="water-stat"><span class="water-stat-icon">◌</span><small>SOIL OBSERVATION</small><strong id="waterDashSoil">Not assessed</strong><small>Manual field entry</small></div>
-    </div>
-    <div class="water-dashboard-footnote"><span class="water-info-mark">i</span><span>Dashboard values depend on the field inputs and forecast data available. A dash means the value has not yet been supplied or calculated; it does not mean zero.</span></div>
-
-    <div class="water-gallery-heading">
-      <div><span class="water-kicker">WATER HERITAGE · PHASE 1</span><h2>Zimbabwe's water landmarks</h2><p>Explore six important water resources through a curated visual collection.</p></div>
-      <span class="water-chip">06 featured places</span>
-    </div>
-    <div class="water-resource-gallery">
-      <article class="water-resource-card water-resource-featured"><img loading="lazy" src="assets/water/victoria-falls-main.webp" alt="Victoria Falls, supplied photograph"><div class="water-card-copy"><span class="water-card-type">WATERFALL · ZAMBEZI</span><strong>Victoria Falls</strong><small>Matabeleland North · Mosi-oa-Tunya</small><span class="water-card-note">Featured photograph supplied for AgroSense</span></div></article>
-      <article class="water-resource-card"><img loading="lazy" src="assets/water/victoria-falls-gorge.webp" alt="Victoria Falls gorge and rainforest, supplied photograph"><div class="water-card-copy"><span class="water-card-type">GORGE · ZAMBEZI</span><strong>Victoria Falls Gorge</strong><small>Matabeleland North · River landscape</small><span class="water-card-note">Second supplied photograph</span></div></article>
-      <article class="water-resource-card"><img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/KaribaDam.jpg?width=1000" alt="Kariba Dam and Lake Kariba"><div class="water-card-copy"><span class="water-card-type">RESERVOIR · ZAMBEZI</span><strong>Lake Kariba & Kariba Dam</strong><small>North-western Zimbabwe · Major reservoir</small><a href="https://commons.wikimedia.org/wiki/Category:Kariba_Dam" target="_blank" rel="noopener">View photo sources & licences ↗</a></div></article>
-      <article class="water-resource-card"><img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/Lake_Chivero_from_on_top_of_the_Dam_wall.jpg?width=1000" alt="Lake Chivero from the dam wall"><div class="water-card-copy"><span class="water-card-type">RESERVOIR · MANYAME</span><strong>Lake Chivero</strong><small>Mashonaland West · Water supply reservoir</small><a href="https://commons.wikimedia.org/wiki/Category:Lake_Chivero" target="_blank" rel="noopener">View photo sources & licences ↗</a></div></article>
-      <article class="water-resource-card"><img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/Lake_Mutirikwe.jpg?width=1000" alt="Lake Mutirikwe"><div class="water-card-copy"><span class="water-card-type">RESERVOIR · MZINGWANE</span><strong>Lake Mutirikwe</strong><small>Masvingo · Inland reservoir</small><a href="https://commons.wikimedia.org/wiki/File:Lake_Mutirikwe.jpg" target="_blank" rel="noopener">View photo source & licence ↗</a></div></article>
-      <article class="water-resource-card"><img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/Osborne_spillway.jpg?width=1000" alt="Osborne Dam spillway"><div class="water-card-copy"><span class="water-card-type">DAM · ODZI RIVER</span><strong>Osborne Dam</strong><small>Manicaland · Reservoir and spillway</small><a href="https://commons.wikimedia.org/wiki/File:Osborne_spillway.jpg" target="_blank" rel="noopener">View photo source & licence ↗</a></div></article>
-    </div>
-    <div class="water-gallery-disclaimer"><span class="water-info-mark">i</span><span>Photographs are illustrative. They do not represent current reservoir levels, river flow or water quality. External images are hosted by Wikimedia Commons and remain subject to their individual licences.</span></div>
-  </section>
+    <div class="water-context-actions"><button class="btn tiny" type="button" id="applyWaterContext">Apply field</button><span id="waterContextMessage" role="status" aria-live="polite">Choose a field to link the calculations.</span></div>
+  </div>
+  <div class="water-dashboard-grid">
+    <div class="water-stat"><small>FIELD AREA</small><strong id="waterDashArea">— ha</strong><small id="waterDashField">No field selected</small></div>
+    <div class="water-stat"><small>REFERENCE ET₀</small><strong id="waterDashEto">— mm/day</strong><small id="waterDashWeather">Forecast not loaded</small></div>
+    <div class="water-stat"><small>CROP ETc</small><strong id="waterDashEtc">— mm/day</strong><small id="waterDashDemand">Demand not calculated</small></div>
+    <div class="water-stat"><small>SOIL CONDITION</small><strong id="waterDashSoil">Not assessed</strong><small id="waterDashSoilTime">No observation saved</small></div>
+  </div>
+  <div class="water-dashboard-bottom">
+    <div class="water-operation-card"><div><span class="water-kicker">NEXT ACTION</span><strong id="waterNextAction">Select a field to begin</strong><p id="waterNextDetail">The dashboard will show what information is missing and guide you to the next useful step.</p></div><button class="utilitybtn" type="button" id="waterNextActionBtn">Set up field</button></div>
+    <div class="water-operation-card"><div><span class="water-kicker">LATEST WATER PLAN</span><strong id="waterDashPlan">No plan loaded</strong><p id="waterDashPlanDetail">Saved plans are retrieved from the AgroSense database.</p></div><button class="utilitybtn" type="button" id="waterOpenPlans">View saved plans</button></div>
+  </div>
+  <div class="water-gallery-mini">
+    <div class="water-gallery-mini-copy"><span class="water-kicker">ZIMBABWE WATER LANDSCAPE</span><strong>Water resources that sustain our communities and agriculture.</strong><small>Featured reference: Victoria Falls and the Zambezi River</small></div>
+    <img src="assets/water/victoria-falls-main.webp" alt="Victoria Falls on the Zambezi River" loading="lazy">
+  </div>
+  <p class="water-dashboard-footnote">Forecasts, user-entered observations and calculated estimates are kept distinct. A blank value means data has not been supplied; it does not mean zero.</p>
+</section>
   <nav class="water-workspace-nav" role="tablist" aria-label="Water intelligence workspaces">
     <a href="#water-dashboard" id="water-tab-dashboard" role="tab" aria-controls="water-dashboard" aria-selected="true" tabindex="0">01 <span>Overview</span></a>
     <a href="#water-conditions" id="water-tab-conditions" role="tab" aria-controls="water-conditions" aria-selected="false" tabindex="-1">02 <span>Field conditions</span></a>
@@ -578,5 +601,101 @@ renderTasks();calculateWater();
  });
  const initial=location.hash?location.hash.slice(1):'water-dashboard';
  activate(ids.includes(initial)?initial:'water-dashboard',false);
+})();
+
+/* Field context + operational dashboard: shared values, live calculations and next-step routing. */
+(function(){
+ const $=id=>document.getElementById(id);
+ const key="agrosense.water-intelligence.v1";
+ const read=()=>{try{return JSON.parse(localStorage.getItem(key)||"{}")}catch(_){return {}}};
+ const write=(k,v)=>{try{const d=read();d[k]=v;localStorage.setItem(key,JSON.stringify(d));return true}catch(_){return false}};
+ const value=id=>$(id)?.value?.trim()||"";
+ const number=id=>{const v=value(id);return v===""?null:Number(v)};
+ const text=(id,v)=>{if($(id))$(id).textContent=v};
+ const contextIds=["waterContextScheme","waterContextField","waterContextCrop","waterContextArea"];
+ function setContext(c){
+  if(!c)return;
+  $("waterContextScheme").value=c.scheme||"";
+  $("waterContextField").value=c.field||"";
+  $("waterContextCrop").value=c.crop||"";
+  $("waterContextArea").value=c.area??"";
+  paint();
+ }
+ function paint(){
+  const c={scheme:value("waterContextScheme"),field:value("waterContextField"),crop:value("waterContextCrop"),area:number("waterContextArea")};
+  const complete=!!(c.scheme&&c.field&&c.crop&&Number.isFinite(c.area)&&c.area>0);
+  text("waterFieldStatus",complete?c.scheme+" · "+c.field:"Field setup incomplete");
+  text("waterDashField",complete?c.crop+" · "+c.field:"No field selected");
+  text("waterDashArea",Number.isFinite(c.area)&&c.area>0?c.area.toLocaleString(undefined,{maximumFractionDigits:2})+" ha":"— ha");
+  const weather=read().weather;
+  const eto=Array.isArray(weather?.daily?.et0_fao_evapotranspiration)?Number(weather.daily.et0_fao_evapotranspiration[0]):null;
+  text("waterDashEto",Number.isFinite(eto)?eto.toFixed(2)+" mm/day":"— mm/day");
+  text("waterDashWeather",weather?.retrievedAt?"Forecast · "+new Date(weather.retrievedAt).toLocaleString():"Forecast not loaded");
+  const e=number("etoValue"),kc=number("kcValue"),etc=e!==null&&kc!==null&&e>=0&&kc>0?e*kc:null;
+  text("waterDashEtc",etc!==null?etc.toFixed(2)+" mm/day":"— mm/day");
+  const savedDemand=read().cropDemand;
+  text("waterDashDemand",savedDemand?"Net need "+Number(savedDemand.net).toFixed(2)+" mm/day":"Demand not calculated");
+  const soil=value("soilMoistureStatus")||"unknown";
+  text("waterDashSoil",({unknown:"Not assessed",dry:"Dry","slightly-dry":"Slightly dry",adequate:"Adequate",wet:"Wet"})[soil]||"Not assessed");
+  const obs=read().soilObservation;
+  text("waterDashSoilTime",obs?.recordedAt?"Saved "+new Date(obs.recordedAt).toLocaleString():"No observation saved");
+  const missing=[];
+  if(!complete)missing.push("complete the active field details");
+  if(!weather)missing.push("retrieve the field weather forecast");
+  if(soil==="unknown")missing.push("record a soil observation");
+  if(!savedDemand)missing.push("calculate crop water demand");
+  text("waterNextAction",missing.length?"Next: "+missing[0]:"Field assessment has the core inputs");
+  text("waterNextDetail",missing.length?"Complete the next missing item to build a reliable field assessment.":"Review water availability and delivery efficiency before saving or acting on a plan.");
+  const nextBtn=$("waterNextActionBtn");
+  if(nextBtn){nextBtn.textContent=!complete?"Set up field":!weather?"Get weather":soil==="unknown"?"Record soil":!savedDemand?"Calculate demand":"Review water plan";nextBtn.dataset.target=!complete?"context":!weather?"conditions":soil==="unknown"?"conditions":!savedDemand?"demand":"efficiency";}
+  const plans=Array.isArray(window.waterPlans)?window.waterPlans:[];
+  const match=plans.find(p=>p.field===c.field&&p.scheme===c.scheme);
+  text("waterDashPlan",match?Number(match.gross).toLocaleString(undefined,{maximumFractionDigits:1})+" m³/day":"No saved plan for this field");
+  text("waterDashPlanDetail",match?"Saved estimate · "+(match.crop||c.crop)+" · "+(match.area||c.area)+" ha":"Save a plan in Water Planning to see its latest database record here.");
+ }
+ $("applyWaterContext")?.addEventListener("click",()=>{
+  const c={scheme:value("waterContextScheme"),field:value("waterContextField"),crop:value("waterContextCrop"),area:number("waterContextArea")};
+  if(!c.scheme||!c.field||!c.crop||!Number.isFinite(c.area)||c.area<=0){text("waterContextMessage","Enter farm, field ID, crop and a valid area greater than zero.");return}
+  write("activeField",c);
+  $("planScheme").value=c.scheme;$("planField").value=c.field;$("planCrop").value=c.crop;
+  $("area").value=c.area;$("cropArea").value=c.area;
+  $("cropArea").dispatchEvent(new Event("change",{bubbles:true}));
+  $("area").dispatchEvent(new Event("change",{bubbles:true}));
+  text("waterContextMessage","Active field applied to crop calculations and the irrigation plan.");
+  paint();
+ });
+ contextIds.forEach(id=>$(id)?.addEventListener("input",paint));
+ $("waterNextActionBtn")?.addEventListener("click",()=>{
+  const target=$("waterNextActionBtn").dataset.target;
+  if(target==="context"){$("waterContextScheme").focus();return}
+  const tab=document.querySelector('.water-workspace-nav [aria-controls="water-'+target+'"]');
+  tab?.click();
+ });
+ $("waterOpenPlans")?.addEventListener("click",()=>{
+  const tab=document.querySelector('.water-workspace-nav [aria-controls="water-efficiency"]');tab?.click();
+  document.getElementById("planForm")?.scrollIntoView({behavior:"smooth",block:"center"});
+ });
+ const active=read().activeField;if(active)setContext(active);
+ // Apply the active field to planner fields only when they are still empty.
+ if(active){
+  if(!$("planScheme").value)$("planScheme").value=active.scheme;
+  if(!$("planField").value)$("planField").value=active.field;
+  if(!$("planCrop").value)$("planCrop").value=active.crop;
+ }
+ // Keep calculated demand current as users edit values; never treat incomplete values as zero.
+ ["etoValue","kcValue","effectiveRain","cropArea"].forEach(id=>$(id)?.addEventListener("input",()=>{
+  const e=number("etoValue"),k=number("kcValue"),r=number("effectiveRain"),a=number("cropArea");
+  if(e===null||k===null||r===null||a===null||e<0||e>30||k<=0||k>2||r<0||r>100||a<=0){text("cropNetDemand","—");text("cropDemandDetail","Complete valid ETo, Kc, effective rainfall and field area to calculate.");return}
+  const etc=e*k,net=Math.max(0,etc-r),volume=net*a*10;
+  text("cropNetDemand",net.toFixed(2)+" mm/day");
+  text("cropDemandDetail","ETc "+etc.toFixed(2)+" mm/day · net volume "+volume.toFixed(1)+" m³/day across "+a+" ha. Indicative estimate only.");
+  write("cropDemand",{eto:e,kc:k,rain:r,area:a,etc,net,volume,calculatedAt:new Date().toISOString()});
+  paint();
+ }));
+ // Refresh dashboard after weather/soil/planner actions and database refresh.
+ ["fetchWeatherBtn","saveSoilObservation","checkEfficiencyBtn","checkWaterBalanceBtn","calculateCropDemand","applyCropDemand","useForecastEto","usePlannerArea","usePlannerDemand","refreshPlansBtn","refreshPlansB"].forEach(id=>$(id)?.addEventListener("click",()=>setTimeout(paint,300)));
+ document.addEventListener("input",e=>{if(e.target.closest("#view-water")||["area","depth","efficiency","planScheme","planField","planCrop"].includes(e.target.id))paint()});
+ document.addEventListener("change",paint);
+ paint();
 })();
 </script></body></html>
