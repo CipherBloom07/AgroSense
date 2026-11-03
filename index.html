@@ -126,6 +126,18 @@ html[data-theme="light"] .empty{color:#698272}
 @media(max-width:700px){.water-workspace-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));top:58px}.water-workspace-nav a{justify-content:center;padding:10px 6px}.water-section-grid{grid-template-columns:1fr}.water-section{scroll-margin-top:105px}}
 @media(max-width:520px){.water-vicfalls-hero{min-height:290px;background-position:58% center}.water-hero-copy{padding:27px 20px}.water-hero-caption{right:12px;bottom:10px;font-size:8px}.water-dashboard-grid{gap:8px}.water-dashboard-grid .water-stat{padding:12px;min-height:116px}.water-stat strong{font-size:18px}.water-resource-gallery{grid-template-columns:1fr}.water-resource-card img{height:190px}.water-section-heading,.water-gallery-heading{align-items:flex-start;flex-direction:column;gap:9px}}
 @media(prefers-reduced-motion:reduce){.water-vicfalls-hero:before,.water-vicfalls-hero:after{animation:none}.water-resource-card,.water-resource-card img{transition:none}}
+
+/* Application-style Water Intelligence workspace navigation */
+.water-workspace-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.water-workspace-nav a{justify-content:center;text-align:center;min-height:43px;border:1px solid transparent}
+.water-workspace-nav a[aria-selected="true"]{background:var(--panel2);color:var(--lime);border-color:#6ad8a755;box-shadow:0 4px 14px #0001}
+.water-workspace-nav a span{white-space:nowrap}
+.water-step-indicator{display:flex;align-items:center;gap:14px;margin:0 2px 18px;color:var(--muted);font-size:10px;font-weight:750}
+.water-step-track{height:4px;flex:1;max-width:180px;background:var(--line);border-radius:99px;overflow:hidden}
+.water-step-track span{display:block;height:100%;width:20%;background:linear-gradient(90deg,var(--green),var(--lime));border-radius:99px;transition:width .25s ease}
+.water-section[hidden]{display:none!important}
+.water-workspace-nav a:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+@media(max-width:700px){.water-workspace-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.water-workspace-nav a{justify-content:flex-start;padding:10px 12px}.water-workspace-nav a:last-child{grid-column:span 2}.water-step-track{max-width:110px}}
 </style></head><body><a class="skiplink" href="#mainContent">Skip to main content</a><div class="shell">
 <aside class="sidebar"><div class="brand"><svg class="brandmark" viewBox="0 0 100 100" aria-label="AgroSense leaf and water logo"><defs><linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#00634b"/><stop offset=".55" stop-color="#15a653"/><stop offset="1" stop-color="#8bd21d"/></linearGradient><linearGradient id="drop" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#064dbb"/><stop offset="1" stop-color="#16d9fa"/></linearGradient></defs><path d="M48 5C33 28 15 43 15 61a34 34 0 0 0 67 7C70 77 46 70 37 55 27 39 36 23 48 5Z" fill="url(#leaf)"/><path d="M38 57C41 39 58 23 79 16 75 37 63 54 45 62" fill="none" stroke="#d8ffb1" stroke-width="3" stroke-linecap="round"/><path d="M53 30C47 43 38 53 38 63a16 16 0 0 0 32 0C70 53 61 43 53 30Z" fill="url(#drop)" stroke="#b4f8ff" stroke-width="1.5"/><path d="M79 34h9l5-6h4M81 43h8l5-5h3" stroke="#23cf89" stroke-width="3" fill="none" stroke-linecap="round"/></svg><div class="brandname">Agro<span>Sense</span><small>by CipherBloom</small></div></div><div class="navlabel">Intelligence workspace</div><nav class="nav" id="sideNav"><button class="active" data-view="overview"><span class="navicon">⌂</span> Command centre</button><button data-view="plant"><span class="navicon">✿</span> Plant Doctor</button><button data-view="water"><span class="navicon">◉</span> Water intelligence</button><button data-view="climate"><span class="navicon">☼</span> Climate & risk</button><button data-view="gis"><span class="navicon">⌖</span> GIS & fields</button><button data-view="assets"><span class="navicon">⚙</span> Infrastructure</button><button data-view="ops"><span class="navicon">▤</span> Operations centre</button><button data-view="evidence"><span class="navicon">▧</span> Data & evidence</button></nav><div class="sidefoot"><span class="liveflag"><i class="pulse"></i> PROTOTYPE ENVIRONMENT</span><p>Smarter decisions. Healthier crops. Sustainable tomorrow.</p></div></aside>
 <main class="main" id="mainContent"><header class="topbar"><div class="crumb">AGROSENSE <span style="color:#426957">/</span> <b id="crumb">Command centre</b></div><div class="topright"><button class="utilitybtn" id="commandBtn" type="button" aria-label="Open command palette" title="Command palette (Ctrl or ⌘ + K)">⌘K <span>Command</span></button><button class="utilitybtn theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Switch theme"><span class="theme-symbol" id="themeSymbol">☼</span><span id="themeLabel">Light mode</span></button><button class="utilitybtn" id="exportBtn" type="button" title="Export local demo records as JSON">⇩ <span>Export</span></button><span class="status"><i></i> Demo data · no live feeds</span><div class="avatar" title="CipherBloom prototype">CB</div></div></header><div class="content">
@@ -157,7 +169,7 @@ html[data-theme="light"] .empty{color:#698272}
 </div><div class="panel"><h2>Before opening the water</h2><div class="checkrow"><input type="checkbox"><div>Review recent rainfall<small>Account for effective rain before scheduling irrigation.</small></div></div><div class="checkrow"><input type="checkbox"><div>Check root-zone moisture<small>Use a verified sensor reading or a field check.</small></div></div><div class="checkrow"><input type="checkbox"><div>Confirm crop stage<small>Crop demand changes during the growing season.</small></div></div><div class="checkrow"><input type="checkbox"><div>Inspect delivery system<small>Check for leaks, blocked outlets and uneven application.</small></div></div><div class="notice">This calculation is a planning estimate, not a crop-specific prescription. Real irrigation needs depend on crop, soil, weather, rainfall and system design.</div></div></div>
 <div class="water-workspace">
   <div class="panelhead"><div><h2>Water intelligence workspace</h2><p>Explore field conditions, crop demand, water efficiency and actionable insights without leaving this module.</p></div><span class="pill">8 connected functions</span></div>
-  <section class="water-section water-dashboard" id="water-dashboard">
+  <section class="water-section water-dashboard" id="water-dashboard" role="tabpanel" aria-labelledby="water-tab-dashboard">
     <div class="water-vicfalls-hero">
       <div class="water-hero-copy">
         <span class="water-hero-tag">AGROSENSE · ZIMBABWE WATER INTELLIGENCE</span>
@@ -194,10 +206,15 @@ html[data-theme="light"] .empty{color:#698272}
     </div>
     <div class="water-gallery-disclaimer"><span class="water-info-mark">i</span><span>Photographs are illustrative. They do not represent current reservoir levels, river flow or water quality. External images are hosted by Wikimedia Commons and remain subject to their individual licences.</span></div>
   </section>
-  <nav class="water-workspace-nav" aria-label="Water intelligence sections">
-    <a href="#water-dashboard" aria-current="page">▦ Field dashboard</a><a href="#water-conditions">☁ Field conditions</a><a href="#water-demand">🌱 Crop water needs</a><a href="#water-efficiency">💧 Water planning</a><a href="#water-insights">✦ Insights & analytics</a>
+  <nav class="water-workspace-nav" role="tablist" aria-label="Water intelligence workspaces">
+    <a href="#water-dashboard" id="water-tab-dashboard" role="tab" aria-controls="water-dashboard" aria-selected="true" tabindex="0">01 <span>Overview</span></a>
+    <a href="#water-conditions" id="water-tab-conditions" role="tab" aria-controls="water-conditions" aria-selected="false" tabindex="-1">02 <span>Field conditions</span></a>
+    <a href="#water-demand" id="water-tab-demand" role="tab" aria-controls="water-demand" aria-selected="false" tabindex="-1">03 <span>Crop needs</span></a>
+    <a href="#water-efficiency" id="water-tab-efficiency" role="tab" aria-controls="water-efficiency" aria-selected="false" tabindex="-1">04 <span>Water planning</span></a>
+    <a href="#water-insights" id="water-tab-insights" role="tab" aria-controls="water-insights" aria-selected="false" tabindex="-1">05 <span>Insights</span></a>
   </nav>
-  <section class="water-section" id="water-conditions">
+  <div class="water-step-indicator" aria-live="polite"><span id="waterStepLabel">Workspace 1 of 5 · Overview</span><span class="water-step-track"><span id="waterStepProgress"></span></span></div>
+  <section class="water-section" id="water-conditions" role="tabpanel" aria-labelledby="water-tab-conditions" hidden>
     <div class="panelhead"><div><h2>1. Field conditions</h2><p>Weather-aware planning and recorded soil or moisture observations.</p></div><span class="water-chip">Weather + soil assessment</span></div>
     <div class="water-section-grid">
       <div class="panel">
@@ -220,7 +237,7 @@ html[data-theme="light"] .empty{color:#698272}
       </div>
     </div>
   </section>
-  <section class="water-section" id="water-demand">
+  <section class="water-section" id="water-demand" role="tabpanel" aria-labelledby="water-tab-demand" hidden>
     <div class="panelhead"><div><h2>2. Crop water requirement</h2><p>Estimate crop evapotranspiration using reference ET and a crop coefficient supplied from a verified agronomic source.</p></div><span class="water-chip">Crop demand analysis</span></div>
     <div class="panel">
       <div class="formgrid">
@@ -235,7 +252,7 @@ html[data-theme="light"] .empty{color:#698272}
       <p class="water-source">Method: ETc = ETo × Kc; indicative net irrigation need = max(0, ETc − effective rainfall). Volume = net depth × area × 10. Use locally validated crop coefficients and account for soil, growth stage and irrigation method. This is not a prescription.</p>
     </div>
   </section>
-  <section class="water-section" id="water-efficiency">
+  <section class="water-section" id="water-efficiency" role="tabpanel" aria-labelledby="water-tab-efficiency" hidden>
     <div class="panelhead"><div><h2>3. Efficiency & water resources</h2><p>Review delivery performance and compare estimated demand with available water.</p></div><span class="water-chip">Efficiency + resource monitoring</span></div>
     <div class="water-section-grid">
       <div class="panel">
@@ -257,7 +274,7 @@ html[data-theme="light"] .empty{color:#698272}
       </div>
     </div>
   </section>
-  <section class="water-section" id="water-insights">
+  <section class="water-section" id="water-insights" role="tabpanel" aria-labelledby="water-tab-insights" hidden>
     <div class="panelhead"><div><h2>4. Insights & water history</h2><p>Combine entered conditions and calculations into explainable recommendations and a summary of saved plans.</p></div><span class="water-chip">Alerts + analytics</span></div>
     <div class="water-section-grid">
       <div class="panel">
@@ -524,4 +541,42 @@ renderTasks();calculateWater();
  updateWaterDashboard();
 })();
 
+
+/* Water Intelligence: guided, self-explanatory workspace tabs. */
+(function(){
+ const ids=["water-dashboard","water-conditions","water-demand","water-efficiency","water-insights"];
+ const labels=["Overview","Field conditions","Crop needs","Water planning","Insights"];
+ const nav=document.querySelector('.water-workspace-nav');
+ if(!nav)return;
+ const tabs=ids.map((id)=>nav.querySelector('[aria-controls="'+id+'"]'));
+ const panels=ids.map(id=>document.getElementById(id));
+ const label=document.getElementById('waterStepLabel');
+ const progress=document.getElementById('waterStepProgress');
+ function activate(id,moveFocus){
+  let index=ids.indexOf(id);if(index<0)index=0;
+  tabs.forEach((tab,i)=>{const selected=i===index;tab.setAttribute('aria-selected',String(selected));tab.tabIndex=selected?0:-1;});
+  panels.forEach((panel,i)=>{panel.hidden=i!==index;});
+  if(label)label.textContent='Workspace '+(index+1)+' of 5 · '+labels[index];
+  if(progress)progress.style.width=((index+1)/5*100)+'%';
+  if(moveFocus&&tabs[index])tabs[index].focus();
+  if(history.replaceState)history.replaceState(null,'','#'+ids[index]);
+ }
+ nav.addEventListener('click',function(event){
+  const tab=event.target.closest('[role="tab"]');
+  if(!tab||!nav.contains(tab))return;
+  event.preventDefault();activate(tab.getAttribute('aria-controls'),false);
+ });
+ nav.addEventListener('keydown',function(event){
+  const current=event.target.closest('[role="tab"]');if(!current)return;
+  let index=tabs.indexOf(current),next=index;
+  if(event.key==='ArrowRight')next=(index+1)%tabs.length;
+  else if(event.key==='ArrowLeft')next=(index-1+tabs.length)%tabs.length;
+  else if(event.key==='Home')next=0;
+  else if(event.key==='End')next=tabs.length-1;
+  else return;
+  event.preventDefault();activate(ids[next],true);
+ });
+ const initial=location.hash?location.hash.slice(1):'water-dashboard';
+ activate(ids.includes(initial)?initial:'water-dashboard',false);
+})();
 </script></body></html>
