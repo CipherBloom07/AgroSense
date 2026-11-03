@@ -399,7 +399,6 @@ renderTasks();calculateWater();
    }else{notes.push("CROP DEMAND — Not calculated. Supply ET₀, a verified crop-stage Kc, effective rainfall and field area.");missing++}
    if(eff){
      notes.push("DELIVERY — Entered delivery efficiency "+Number(eff.pct).toFixed(1)+"%; measured difference "+(Number(eff.supplied)-Number(eff.delivered)).toFixed(1)+" m³. Check measurement method and inspect for losses.");
-     if(eff.pct<70)priority="Investigate delivery losses";
    }else{notes.push("DELIVERY — No measured supplied-versus-delivered volume comparison. Efficiency remains unknown.");missing++}
    if(balance){
      notes.push("WATER SUPPLY — Entered supply covers approximately "+Number(balance.days).toFixed(1)+" day(s) at "+Number(balance.demand).toFixed(1)+" m³/day.");
