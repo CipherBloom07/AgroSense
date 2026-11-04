@@ -78,7 +78,7 @@ app.post("/api/auth/bootstrap",async(req,res,next)=>{
   if(!safeEqual(setup_key||"",process.env.AGROSENSE_SETUP_KEY))return res.status(403).json({error:"Invalid setup key."});
   if(typeof display_name!=="string"||display_name.trim().length<2||typeof email!=="string"||!/^\S+@\S+\.\S+$/.test(email)||typeof password!=="string"||password.length<12)return res.status(400).json({error:"Provide a name, valid email and password of at least 12 characters."});
   try{
-    const existing=await pool.query("SELECT 1 FROM scheme_memberships WHERE role='irrigation_officer' LIMIT 1");
+    const existing=await pool.query("SELECT 1 FROM app_users LIMIT 1");
     if(existing.rows.length)return res.status(409).json({error:"An irrigation officer already exists. Ask an existing officer to create additional accounts."});
     const sid=scheme_id===undefined||scheme_id===null||scheme_id===""?null:Number(scheme_id);
     if(sid!==null&&(!Number.isSafeInteger(sid)||sid<=0))return res.status(400).json({error:"scheme_id must be a positive integer."});
