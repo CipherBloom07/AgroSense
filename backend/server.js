@@ -251,7 +251,7 @@ app.post("/api/water-plans/:id/revise",requireAuth,async(req,res,next)=>{
   const assumptions=typeof req.body.assumptions==="string"?req.body.assumptions.trim():"";
   const plannedFor=req.body.planned_for;
   if(!Number.isSafeInteger(id)||id<=0||!Number.isFinite(depth)||depth<0||depth>1000||!Number.isFinite(efficiency)||efficiency<=0||efficiency>100)return res.status(400).json({error:"Enter a valid plan ID, target depth and efficiency."});
-  if(plannedFor!==undefined&&!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(plannedFor)))return res.status(400).json({error:"planned_for must use YYYY-MM-DD format."});
+  if(plannedFor!==undefined&&!/^\d{4}-\d{2}-\d{2}$/.test(String(plannedFor)))return res.status(400).json({error:"planned_for must use YYYY-MM-DD format."});
   try{
     const client=await pool.connect();
     try{
