@@ -45,6 +45,85 @@ app.use(cors({
 app.use(express.json({ limit: "20kb" }));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 120, standardHeaders: "draft-7", legacyHeaders: false }));
 
+
+const crypto = require("node:crypto");
+const SESSION_DAYS = 7;
+const hashPassword = (password, salt) => crypto.scryptSync(password, salt, 64).toString("hex");
+const hashToken = (token) => crypto.createHash("sha256").update(token).digest("hex");
+function safeEqual(a,b){const aa=Buffer.from(String(a));const bb=Buffer.from(String(b));return aa.length===bb.length&&crypto.timingSafeEqual(aa,bb);}
+async function requireAuth(req,res,next){
+  try{
+    const token=(req.headers.authorization||"").replace(/^Bearer\s+/i,"").trim();
+    if(!token)return res.status(401).json({error:"Sign in to continue."});
+    const result=await pool.query(
+      "SELECT u.id,u.display_name,u.email,u.is_active FROM auth_sessions s JOIN app_users u ON u.id=s.user_id WHERE s.token_hash=$1 AND s.expires_at>NOW()",
+      [hashToken(token)]
+    );
+    if(!result.rows.length||!result.rows[0].is_active)return res.status(401).json({error:"Session is invalid or expired. Sign in again."});
+    req.user=result.rows[0];req.tokenHash=hashToken(token);next();
+  }catch(error){next(error);}
+}
+async function requireSchemeRole(req,res,next){
+  try{
+    const schemeId=Number(req.params.schemeId||req.body.scheme_id||req.query.scheme_id);
+    if(!Number.isSafeInteger(schemeId)||schemeId<=0)return res.status(400).json({error:"A valid scheme_id is required."});
+    const result=await pool.query("SELECT role FROM scheme_memberships WHERE user_id=$1 AND scheme_id=$2",[req.user.id,schemeId]);
+    if(!result.rows.length)return res.status(403).json({error:"You are not assigned to this scheme."});
+    req.schemeRole=result.rows[0].role;req.schemeId=schemeId;next();
+  }catch(error){next(error);}
+}
+app.post("/api/auth/bootstrap",async(req,res,next)=>{
+  const {setup_key,display_name,email,password,scheme_id}=req.body||{};
+  if(!process.env.AGROSENSE_SETUP_KEY)return res.status(503).json({error:"Set AGROSENSE_SETUP_KEY on the API host before creating the first officer."});
+  if(!safeEqual(setup_key||"",process.env.AGROSENSE_SETUP_KEY))return res.status(403).json({error:"Invalid setup key."});
+  if(typeof display_name!=="string"||display_name.trim().length<2||typeof email!=="string"||!/^\S+@\S+\.\S+$/.test(email)||typeof password!=="string"||password.length<12)return res.status(400).json({error:"Provide a name, valid email and password of at least 12 characters."});
+  try{
+    const existing=await pool.query("SELECT 1 FROM scheme_memberships WHERE role='irrigation_officer' LIMIT 1");
+    if(existing.rows.length)return res.status(409).json({error:"An irrigation officer already exists. Ask an existing officer to create additional accounts."});
+    const salt=crypto.randomBytes(16).toString("hex");
+    const user=await pool.query("INSERT INTO app_users(display_name,email,password_salt,password_hash) VALUES($1,$2,$3,$4) RETURNING id,display_name,email",[display_name.trim(),email.trim().toLowerCase(),salt,hashPassword(password,salt)]);
+    if(scheme_id){
+      const sid=Number(scheme_id);
+      if(!Number.isSafeInteger(sid)||sid<=0)return res.status(400).json({error:"scheme_id must be a positive integer."});
+      await pool.query("INSERT INTO scheme_memberships(user_id,scheme_id,role) VALUES($1,$2,'irrigation_officer')",[user.rows[0].id,sid]);
+    }
+    res.status(201).json({data:user.rows[0],message:"First officer account created. Sign in to manage scheme membership."});
+  }catch(error){if(error.code==="23505")return res.status(409).json({error:"An account with that email already exists."});next(error);}
+});
+app.post("/api/auth/login",async(req,res,next)=>{
+  const email=typeof req.body.email==="string"?req.body.email.trim().toLowerCase():"";
+  const password=typeof req.body.password==="string"?req.body.password:"";
+  try{
+    const result=await pool.query("SELECT id,display_name,email,password_salt,password_hash,is_active FROM app_users WHERE email=$1",[email]);
+    const user=result.rows[0];
+    if(!user||!user.is_active||!safeEqual(hashPassword(password,user.password_salt),user.password_hash))return res.status(401).json({error:"Email or password is incorrect."});
+    const token=crypto.randomBytes(32).toString("base64url");
+    const expires=new Date(Date.now()+SESSION_DAYS*86400000);
+    await pool.query("INSERT INTO auth_sessions(user_id,token_hash,expires_at) VALUES($1,$2,$3)",[user.id,hashToken(token),expires]);
+    const memberships=await pool.query("SELECT sm.scheme_id,s.name AS scheme_name,sm.role FROM scheme_memberships sm JOIN schemes s ON s.id=sm.scheme_id WHERE sm.user_id=$1 ORDER BY s.name",[user.id]);
+    res.json({data:{token,expires_at:expires.toISOString(),user:{id:user.id,display_name:user.display_name,email:user.email},memberships:memberships.rows}});
+  }catch(error){next(error);}
+});
+app.post("/api/auth/logout",requireAuth,async(req,res,next)=>{
+  try{await pool.query("DELETE FROM auth_sessions WHERE token_hash=$1",[req.tokenHash]);res.json({data:{logged_out:true}});}catch(error){next(error);}
+});
+app.get("/api/auth/me",requireAuth,async(req,res,next)=>{
+  try{const memberships=await pool.query("SELECT sm.scheme_id,s.name AS scheme_name,sm.role FROM scheme_memberships sm JOIN schemes s ON s.id=sm.scheme_id WHERE sm.user_id=$1 ORDER BY s.name",[req.user.id]);res.json({data:{user:req.user,memberships:memberships.rows}});}catch(error){next(error);}
+});
+app.post("/api/auth/users",requireAuth,async(req,res,next)=>{
+  const {display_name,email,password,scheme_id,role}=req.body||{};
+  const sid=Number(scheme_id);
+  if(typeof display_name!=="string"||display_name.trim().length<2||typeof email!=="string"||!/^\S+@\S+\.\S+$/.test(email)||typeof password!=="string"||password.length<12||!Number.isSafeInteger(sid)||sid<=0||!["farmer","irrigation_officer"].includes(role))return res.status(400).json({error:"Provide valid account details, scheme and role. Password must be at least 12 characters."});
+  try{
+    const access=await pool.query("SELECT role FROM scheme_memberships WHERE user_id=$1 AND scheme_id=$2",[req.user.id,sid]);
+    if(!access.rows.some(x=>x.role==="irrigation_officer"))return res.status(403).json({error:"Only an officer assigned to this scheme can create its users."});
+    const salt=crypto.randomBytes(16).toString("hex");
+    const user=await pool.query("INSERT INTO app_users(display_name,email,password_salt,password_hash) VALUES($1,$2,$3,$4) RETURNING id,display_name,email",[display_name.trim(),email.trim().toLowerCase(),salt,hashPassword(password,salt)]);
+    await pool.query("INSERT INTO scheme_memberships(user_id,scheme_id,role) VALUES($1,$2,$3)",[user.rows[0].id,sid,role]);
+    res.status(201).json({data:{...user.rows[0],scheme_id:sid,role}});
+  }catch(error){if(error.code==="23505")return res.status(409).json({error:"An account with that email already exists."});if(error.code==="23503")return res.status(400).json({error:"The selected scheme does not exist."});next(error);}
+});
+
 app.get("/api/health", async (_req, res) => {
   try {
     await pool.query("SELECT 1");
@@ -164,6 +243,79 @@ app.post("/api/water-plans", async (req, res, next) => {
     if (error.code === "23503") return res.status(400).json({ error: "The selected field does not exist." });
     next(error);
   }
+});
+
+
+app.post("/api/water-plans/:id/submit",requireAuth,async(req,res,next)=>{
+  const id=Number(req.params.id);if(!Number.isSafeInteger(id)||id<=0)return res.status(400).json({error:"Invalid water plan ID."});
+  try{
+    const client=await pool.connect();
+    try{
+      await client.query("BEGIN");
+      const found=await client.query("SELECT wp.*,f.scheme_id FROM water_plans wp JOIN fields f ON f.id=wp.field_id WHERE wp.id=$1 FOR UPDATE",[id]);
+      if(!found.rows.length){await client.query("ROLLBACK");return res.status(404).json({error:"Water plan not found."});}
+      const plan=found.rows[0],membership=await client.query("SELECT role FROM scheme_memberships WHERE user_id=$1 AND scheme_id=$2",[req.user.id,plan.scheme_id]);
+      if(!membership.rows.some(x=>x.role==="farmer")){await client.query("ROLLBACK");return res.status(403).json({error:"Only a farmer assigned to this scheme can submit this plan."});}
+      if(!["draft","changes_requested"].includes(plan.status)){await client.query("ROLLBACK");return res.status(409).json({error:"Only draft plans or plans returned for changes can be submitted."});}
+      await client.query("UPDATE water_plans SET status='submitted',created_by=COALESCE(created_by,$2),submitted_at=NOW(),reviewed_at=NULL,reviewed_by=NULL,review_comment=NULL WHERE id=$1",[id,req.user.id]);
+      await client.query("COMMIT");res.json({data:{id,status:"submitted"}});
+    }catch(error){await client.query("ROLLBACK");throw error;}finally{client.release();}
+  }catch(error){next(error);}
+});
+app.get("/api/water-plans/review-queue",requireAuth,async(req,res,next)=>{
+  const schemeId=Number(req.query.scheme_id);if(!Number.isSafeInteger(schemeId)||schemeId<=0)return res.status(400).json({error:"A valid scheme_id is required."});
+  try{
+    const membership=await pool.query("SELECT role FROM scheme_memberships WHERE user_id=$1 AND scheme_id=$2",[req.user.id,schemeId]);
+    if(!membership.rows.some(x=>x.role==="irrigation_officer"))return res.status(403).json({error:"Only an officer assigned to this scheme can review plans."});
+    const result=await pool.query("SELECT wp.id,wp.field_id,f.field_code,f.crop_name,f.area_hectares,s.name AS scheme_name,wp.target_depth_mm_per_day,wp.application_efficiency_percent,wp.net_volume_m3_per_day,wp.gross_volume_m3_per_day,wp.assumptions,wp.planned_for,wp.status,wp.submitted_at,wp.revision_number,u.display_name AS submitted_by FROM water_plans wp JOIN fields f ON f.id=wp.field_id JOIN schemes s ON s.id=f.scheme_id LEFT JOIN app_users u ON u.id=wp.created_by WHERE f.scheme_id=$1 AND wp.status IN ('submitted','under_review') ORDER BY wp.submitted_at ASC",[schemeId]);
+    res.json({data:result.rows});
+  }catch(error){next(error);}
+});
+app.post("/api/water-plans/:id/review",requireAuth,async(req,res,next)=>{
+  const id=Number(req.params.id),decision=req.body.decision,comment=typeof req.body.comment==="string"?req.body.comment.trim():"";
+  if(!Number.isSafeInteger(id)||id<=0||!["under_review","approved","changes_requested","rejected"].includes(decision)||comment.length>2000)return res.status(400).json({error:"Provide a valid decision and a comment of at most 2000 characters."});
+  if(["changes_requested","rejected"].includes(decision)&&comment.length<3)return res.status(400).json({error:"A clear reason is required for changes requested or rejection."});
+  try{
+    const client=await pool.connect();
+    try{
+      await client.query("BEGIN");
+      const found=await client.query("SELECT wp.id,wp.status,wp.revision_number,f.scheme_id,wp.created_by FROM water_plans wp JOIN fields f ON f.id=wp.field_id WHERE wp.id=$1 FOR UPDATE",[id]);
+      if(!found.rows.length){await client.query("ROLLBACK");return res.status(404).json({error:"Water plan not found."});}
+      const plan=found.rows[0],membership=await client.query("SELECT role FROM scheme_memberships WHERE user_id=$1 AND scheme_id=$2",[req.user.id,plan.scheme_id]);
+      if(!membership.rows.some(x=>x.role==="irrigation_officer")){await client.query("ROLLBACK");return res.status(403).json({error:"Only an assigned irrigation officer can review this plan."});}
+      if(Number(plan.created_by)===Number(req.user.id)){await client.query("ROLLBACK");return res.status(403).json({error:"You cannot review a plan you submitted yourself."});}
+      if(!["submitted","under_review"].includes(plan.status)){await client.query("ROLLBACK");return res.status(409).json({error:"This plan is not awaiting review."});}
+      await client.query("UPDATE water_plans SET status=$2,reviewed_at=CASE WHEN $2='under_review' THEN NULL ELSE NOW() END,reviewed_by=CASE WHEN $2='under_review' THEN NULL ELSE $3 END,review_comment=$4 WHERE id=$1",[id,decision,req.user.id,comment||null]);
+      await client.query("INSERT INTO water_plan_reviews(water_plan_id,reviewer_id,decision,comment,plan_revision) VALUES($1,$2,$3,$4,$5)",[id,req.user.id,decision,comment||null,plan.revision_number]);
+      await client.query("COMMIT");res.json({data:{id,status:decision,reviewed_by:req.user.id}});
+    }catch(error){await client.query("ROLLBACK");throw error;}finally{client.release();}
+  }catch(error){next(error);}
+});
+app.get("/api/water-plans/:id/reviews",requireAuth,async(req,res,next)=>{
+  const id=Number(req.params.id);if(!Number.isSafeInteger(id)||id<=0)return res.status(400).json({error:"Invalid water plan ID."});
+  try{
+    const access=await pool.query("SELECT f.scheme_id FROM water_plans wp JOIN fields f ON f.id=wp.field_id WHERE wp.id=$1",[id]);
+    if(!access.rows.length)return res.status(404).json({error:"Water plan not found."});
+    const member=await pool.query("SELECT 1 FROM scheme_memberships WHERE user_id=$1 AND scheme_id=$2",[req.user.id,access.rows[0].scheme_id]);
+    if(!member.rows.length)return res.status(403).json({error:"You are not assigned to this scheme."});
+    const result=await pool.query("SELECT r.id,r.decision,r.comment,r.plan_revision,r.created_at,u.display_name AS reviewer FROM water_plan_reviews r JOIN app_users u ON u.id=r.reviewer_id WHERE r.water_plan_id=$1 ORDER BY r.created_at",[id]);
+    res.json({data:result.rows});
+  }catch(error){next(error);}
+});
+app.post("/api/water-plans/:id/irrigation-events",requireAuth,async(req,res,next)=>{
+  const id=Number(req.params.id),volume=Number(req.body.actual_volume_m3),appliedOn=req.body.applied_on,notes=typeof req.body.notes==="string"?req.body.notes.trim():"";
+  if(!Number.isSafeInteger(id)||id<=0||!Number.isFinite(volume)||volume<0||volume>100000000000||notes.length>2000)return res.status(400).json({error:"Enter a valid plan, actual volume and optional notes."});
+  if(appliedOn&&!Number.isFinite(Date.parse(appliedOn)))return res.status(400).json({error:"applied_on must be a valid date/time."});
+  try{
+    const plan=await pool.query("SELECT wp.status,wp.field_id,f.scheme_id FROM water_plans wp JOIN fields f ON f.id=wp.field_id WHERE wp.id=$1",[id]);
+    if(!plan.rows.length)return res.status(404).json({error:"Water plan not found."});
+    if(plan.rows[0].status!=="approved"&&plan.rows[0].status!=="completed")return res.status(409).json({error:"Actual irrigation can only be recorded against an approved plan."});
+    const member=await pool.query("SELECT role FROM scheme_memberships WHERE user_id=$1 AND scheme_id=$2",[req.user.id,plan.rows[0].scheme_id]);
+    if(!member.rows.length)return res.status(403).json({error:"You are not assigned to this scheme."});
+    const result=await pool.query("INSERT INTO irrigation_events(water_plan_id,field_id,recorded_by,applied_on,actual_volume_m3,notes) VALUES($1,$2,$3,COALESCE($4::timestamptz,NOW()),$5,$6) RETURNING id,water_plan_id,field_id,applied_on,actual_volume_m3,notes,created_at",[id,plan.rows[0].field_id,req.user.id,appliedOn||null,volume,notes||null]);
+    await pool.query("UPDATE water_plans SET status='completed' WHERE id=$1",[id]);
+    res.status(201).json({data:result.rows[0]});
+  }catch(error){next(error);}
 });
 
 app.delete("/api/water-plans/:id", async (req, res, next) => {
