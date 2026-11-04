@@ -80,12 +80,12 @@ app.post("/api/auth/bootstrap",async(req,res,next)=>{
   try{
     const existing=await pool.query("SELECT 1 FROM app_users LIMIT 1");
     if(existing.rows.length)return res.status(409).json({error:"An irrigation officer already exists. Ask an existing officer to create additional accounts."});
-    const sid=scheme_id===undefined||scheme_id===null||scheme_id===""?null:Number(scheme_id);
-    if(sid!==null&&(!Number.isSafeInteger(sid)||sid<=0))return res.status(400).json({error:"scheme_id must be a positive integer."});
-    if(sid!==null){const scheme=await pool.query("SELECT id FROM schemes WHERE id=$1",[sid]);if(!scheme.rows.length)return res.status(400).json({error:"The selected scheme does not exist."});}
+    const sid=Number(scheme_id);
+    if(!Number.isSafeInteger(sid)||sid<=0)return res.status(400).json({error:"Select an existing scheme for the first officer account."});
+    {const scheme=await pool.query("SELECT id FROM schemes WHERE id=$1",[sid]);if(!scheme.rows.length)return res.status(400).json({error:"The selected scheme does not exist."});}
     const salt=crypto.randomBytes(16).toString("hex");
     const user=await pool.query("INSERT INTO app_users(display_name,email,password_salt,password_hash) VALUES($1,$2,$3,$4) RETURNING id,display_name,email",[display_name.trim(),email.trim().toLowerCase(),salt,hashPassword(password,salt)]);
-    if(sid!==null)await pool.query("INSERT INTO scheme_memberships(user_id,scheme_id,role) VALUES($1,$2,'irrigation_officer')",[user.rows[0].id,sid]);
+    await pool.query("INSERT INTO scheme_memberships(user_id,scheme_id,role) VALUES($1,$2,'irrigation_officer')",[user.rows[0].id,sid]);
     res.status(201).json({data:user.rows[0],message:"First officer account created. Sign in to manage scheme membership."});
   }catch(error){if(error.code==="23505")return res.status(409).json({error:"An account with that email already exists."});next(error);}
 });
