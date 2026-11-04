@@ -80,13 +80,12 @@ app.post("/api/auth/bootstrap",async(req,res,next)=>{
   try{
     const existing=await pool.query("SELECT 1 FROM scheme_memberships WHERE role='irrigation_officer' LIMIT 1");
     if(existing.rows.length)return res.status(409).json({error:"An irrigation officer already exists. Ask an existing officer to create additional accounts."});
+    const sid=scheme_id===undefined||scheme_id===null||scheme_id===""?null:Number(scheme_id);
+    if(sid!==null&&(!Number.isSafeInteger(sid)||sid<=0))return res.status(400).json({error:"scheme_id must be a positive integer."});
+    if(sid!==null){const scheme=await pool.query("SELECT id FROM schemes WHERE id=$1",[sid]);if(!scheme.rows.length)return res.status(400).json({error:"The selected scheme does not exist."});}
     const salt=crypto.randomBytes(16).toString("hex");
     const user=await pool.query("INSERT INTO app_users(display_name,email,password_salt,password_hash) VALUES($1,$2,$3,$4) RETURNING id,display_name,email",[display_name.trim(),email.trim().toLowerCase(),salt,hashPassword(password,salt)]);
-    if(scheme_id){
-      const sid=Number(scheme_id);
-      if(!Number.isSafeInteger(sid)||sid<=0)return res.status(400).json({error:"scheme_id must be a positive integer."});
-      await pool.query("INSERT INTO scheme_memberships(user_id,scheme_id,role) VALUES($1,$2,'irrigation_officer')",[user.rows[0].id,sid]);
-    }
+    if(sid!==null)await pool.query("INSERT INTO scheme_memberships(user_id,scheme_id,role) VALUES($1,$2,'irrigation_officer')",[user.rows[0].id,sid]);
     res.status(201).json({data:user.rows[0],message:"First officer account created. Sign in to manage scheme membership."});
   }catch(error){if(error.code==="23505")return res.status(409).json({error:"An account with that email already exists."});next(error);}
 });
@@ -206,7 +205,7 @@ app.get("/api/water-plans", async (req, res, next) => {
     if (fieldId !== undefined) { values.push(Number(fieldId)); where = "WHERE wp.field_id = $1"; }
     const sql = "SELECT wp.id, wp.field_id, f.field_code, f.crop_name, f.area_hectares, " +
       "wp.target_depth_mm_per_day, wp.application_efficiency_percent, wp.net_volume_m3_per_day, " +
-      "wp.gross_volume_m3_per_day, wp.calculation_method, wp.assumptions, wp.data_source, wp.planned_for, wp.created_at " +
+      "wp.gross_volume_m3_per_day, wp.calculation_method, wp.assumptions, wp.data_source, wp.planned_for, wp.status, wp.review_comment, wp.revision_number, wp.submitted_at, wp.reviewed_at, wp.created_at " +
       "FROM water_plans wp JOIN fields f ON f.id = wp.field_id " + where + " ORDER BY wp.planned_for DESC, wp.created_at DESC";
     const result = await pool.query(sql, values);
     res.json({ data: result.rows });
@@ -245,6 +244,29 @@ app.post("/api/water-plans", async (req, res, next) => {
   }
 });
 
+
+
+app.post("/api/water-plans/:id/revise",requireAuth,async(req,res,next)=>{
+  const id=Number(req.params.id),depth=Number(req.body.target_depth_mm_per_day),efficiency=Number(req.body.application_efficiency_percent);
+  const assumptions=typeof req.body.assumptions==="string"?req.body.assumptions.trim():"";
+  const plannedFor=req.body.planned_for;
+  if(!Number.isSafeInteger(id)||id<=0||!Number.isFinite(depth)||depth<0||depth>1000||!Number.isFinite(efficiency)||efficiency<=0||efficiency>100)return res.status(400).json({error:"Enter a valid plan ID, target depth and efficiency."});
+  if(plannedFor!==undefined&&!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(plannedFor)))return res.status(400).json({error:"planned_for must use YYYY-MM-DD format."});
+  try{
+    const client=await pool.connect();
+    try{
+      await client.query("BEGIN");
+      const found=await client.query("SELECT wp.id,wp.status,wp.created_by,wp.field_id,f.scheme_id,f.area_hectares FROM water_plans wp JOIN fields f ON f.id=wp.field_id WHERE wp.id=$1 FOR UPDATE",[id]);
+      if(!found.rows.length){await client.query("ROLLBACK");return res.status(404).json({error:"Water plan not found."});}
+      const plan=found.rows[0],member=await client.query("SELECT role FROM scheme_memberships WHERE user_id=$1 AND scheme_id=$2",[req.user.id,plan.scheme_id]);
+      if(Number(plan.created_by)!==Number(req.user.id)||!member.rows.some(x=>x.role==="farmer")){await client.query("ROLLBACK");return res.status(403).json({error:"Only the farmer who submitted this plan can revise it."});}
+      if(plan.status!=="changes_requested"){await client.query("ROLLBACK");return res.status(409).json({error:"Only a plan returned for changes can be revised."});}
+      const net=Number((Number(plan.area_hectares)*depth*10).toFixed(3)),gross=Number((net/(efficiency/100)).toFixed(3));
+      const result=await client.query("UPDATE water_plans SET target_depth_mm_per_day=$2,application_efficiency_percent=$3,net_volume_m3_per_day=$4,gross_volume_m3_per_day=$5,assumptions=$6,planned_for=COALESCE($7::date,planned_for),status='draft',revision_number=revision_number+1,submitted_at=NULL,reviewed_at=NULL,reviewed_by=NULL,review_comment=NULL WHERE id=$1 RETURNING id,status,revision_number,target_depth_mm_per_day,application_efficiency_percent,net_volume_m3_per_day,gross_volume_m3_per_day,planned_for",[id,depth,efficiency,net,gross,assumptions||null,plannedFor||null]);
+      await client.query("COMMIT");res.json({data:result.rows[0],message:"Revision saved as a draft. Submit it again for review."});
+    }catch(error){await client.query("ROLLBACK");throw error;}finally{client.release();}
+  }catch(error){next(error);}
+});
 
 app.post("/api/water-plans/:id/submit",requireAuth,async(req,res,next)=>{
   const id=Number(req.params.id);if(!Number.isSafeInteger(id)||id<=0)return res.status(400).json({error:"Invalid water plan ID."});
