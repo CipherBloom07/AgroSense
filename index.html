@@ -200,7 +200,7 @@ html[data-theme="light"] .empty{color:#698272}
     <div class="panelhead"><div><h2>Team access & plan approvals</h2><p>Sign in as a farmer or irrigation officer to submit and review plans. Account setup requires the first-officer setup key.</p></div><span class="pill gray" id="waterAuthStatus">Not signed in</span></div>
     <div class="formgrid">
       <form id="waterLoginForm"><h3>Sign in</h3><div class="field"><label for="waterLoginEmail">EMAIL</label><input id="waterLoginEmail" type="email" autocomplete="username" required></div><div class="field"><label for="waterLoginPassword">PASSWORD</label><input id="waterLoginPassword" type="password" autocomplete="current-password" required></div><button class="btn tiny" type="submit">Sign in</button><button class="utilitybtn" type="button" id="waterLogoutBtn" style="margin-left:6px">Sign out</button></form>
-      <form id="waterBootstrapForm"><h3>Set up first officer</h3><div class="field"><label for="waterSetupKey">ONE-TIME SETUP KEY</label><input id="waterSetupKey" type="password" autocomplete="off" required></div><div class="field"><label for="waterOfficerName">OFFICER NAME</label><input id="waterOfficerName" maxlength="120" required></div><div class="field"><label for="waterOfficerEmail">OFFICER EMAIL</label><input id="waterOfficerEmail" type="email" required></div><div class="field"><label for="waterOfficerPassword">PASSWORD (12+ CHARACTERS)</label><input id="waterOfficerPassword" type="password" minlength="12" required></div><div class="field"><label for="waterOfficerScheme">EXISTING SCHEME ID (OPTIONAL)</label><input id="waterOfficerScheme" type="number" min="1"></div><button class="btn tiny" type="submit">Create first officer</button></form>
+      <form id="waterBootstrapForm"><h3>Set up first officer</h3><div class="field"><label for="waterSetupKey">ONE-TIME SETUP KEY</label><input id="waterSetupKey" type="password" autocomplete="off" required></div><div class="field"><label for="waterOfficerName">OFFICER NAME</label><input id="waterOfficerName" maxlength="120" required></div><div class="field"><label for="waterOfficerEmail">OFFICER EMAIL</label><input id="waterOfficerEmail" type="email" required></div><div class="field"><label for="waterOfficerPassword">PASSWORD (12+ CHARACTERS)</label><input id="waterOfficerPassword" type="password" minlength="12" required></div><div class="field"><label for="waterOfficerScheme">ASSIGN TO EXISTING SCHEME</label><select id="waterOfficerScheme" required><option value="">Loading schemes…</option></select></div><button class="btn tiny" type="submit">Create first officer</button></form>
     </div>
     <div id="waterSignedInPanel" class="hide">
       <div class="notice" id="waterSignedInText"></div>
@@ -784,6 +784,12 @@ renderTasks();calculateWater();
   try{await authRequest("/water-plans/"+Number(document.getElementById("waterEventPlanId").value)+"/irrigation-events",{method:"POST",body:JSON.stringify({actual_volume_m3:Number(document.getElementById("waterEventVolume").value),notes:document.getElementById("waterEventNotes").value})});notify("Actual irrigation event recorded.");e.target.reset();await loadWaterPlans();}
   catch(err){notify("Could not record irrigation: "+err.message)}finally{b.disabled=false}
  });
+ async function loadBootstrapSchemes(){
+  const select=document.getElementById("waterOfficerScheme");
+  try{const result=await apiRequest("/schemes");const schemes=result.data||[];select.innerHTML='<option value="">Select a scheme</option>'+schemes.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.name)+' · ID '+esc(s.id)+'</option>').join("");if(!schemes.length)select.innerHTML='<option value="">Create a scheme first</option>';}
+  catch(_){select.innerHTML='<option value="">API unavailable — start backend first</option>';}
+ }
+ loadBootstrapSchemes();
  refreshIdentity();
 })();
 </script></body></html>
