@@ -208,6 +208,7 @@ html[data-theme="light"] .empty{color:#698272}
       <div class="formgrid"><div class="field"><label for="waterWorkflowScheme">SCHEME ID FOR REVIEW QUEUE</label><input id="waterWorkflowScheme" type="number" min="1" placeholder="Enter scheme ID"></div><div class="field" style="align-self:end"><button class="utilitybtn" type="button" id="waterLoadQueueBtn">Load pending reviews</button></div></div>
       <div id="waterReviewQueue"><div class="empty">Load a scheme's pending review queue.</div></div>
       <form id="waterSubmitPlanForm" class="formgrid"><div class="field"><label for="waterSubmitPlanId">PLAN ID TO SUBMIT (FARMER)</label><input id="waterSubmitPlanId" type="number" min="1" required></div><div class="field" style="align-self:end"><button class="btn tiny" type="submit">Submit plan for review</button></div></form>
+      <form id="waterRevisePlanForm" class="formgrid"><div style="grid-column:1/-1"><h3>Revise a plan returned for changes</h3></div><div class="field"><label for="waterRevisePlanId">PLAN ID</label><input id="waterRevisePlanId" type="number" min="1" required></div><div class="field"><label for="waterReviseDepth">UPDATED TARGET DEPTH (mm/day)</label><input id="waterReviseDepth" type="number" min="0" max="1000" step="0.01" required></div><div class="field"><label for="waterReviseEfficiency">APPLICATION EFFICIENCY (%)</label><input id="waterReviseEfficiency" type="number" min="0.01" max="100" step="0.01" required></div><div class="field"><label for="waterReviseAssumptions">REVISION NOTES</label><input id="waterReviseAssumptions" maxlength="2000"></div><div class="field" style="align-self:end"><button class="utilitybtn" type="submit">Save revised draft</button></div></form>
       <form id="waterEventForm" class="formgrid"><div class="field"><label for="waterEventPlanId">APPROVED PLAN ID</label><input id="waterEventPlanId" type="number" min="1" required></div><div class="field"><label for="waterEventVolume">ACTUAL WATER APPLIED (m³)</label><input id="waterEventVolume" type="number" min="0" step="0.01" required></div><div class="field"><label for="waterEventNotes">NOTES</label><input id="waterEventNotes" maxlength="2000"></div><div class="field" style="align-self:end"><button class="utilitybtn" type="submit">Record actual irrigation</button></div></form>
     </div>
     <p class="tinyline">Security note: use HTTPS in deployment, keep the setup key private, and do not share accounts. Session tokens are stored in this browser only.</p>
@@ -772,6 +773,11 @@ renderTasks();calculateWater();
     catch(err){notify("Review failed: "+err.message);btn.disabled=false}
    }));
   }catch(err){host.textContent=err.message;notify(err.message)}finally{b.disabled=false}
+ });
+ document.getElementById("waterRevisePlanForm").addEventListener("submit",async e=>{
+  e.preventDefault();const b=e.submitter;b.disabled=true;
+  try{const id=Number(document.getElementById("waterRevisePlanId").value);const r=await authRequest("/water-plans/"+id+"/revise",{method:"POST",body:JSON.stringify({target_depth_mm_per_day:Number(document.getElementById("waterReviseDepth").value),application_efficiency_percent:Number(document.getElementById("waterReviseEfficiency").value),assumptions:document.getElementById("waterReviseAssumptions").value})});notify("Revision "+r.data.revision_number+" saved as draft. Submit it again for review.");await loadWaterPlans();}
+  catch(err){notify("Revision failed: "+err.message)}finally{b.disabled=false}
  });
  document.getElementById("waterEventForm").addEventListener("submit",async e=>{
   e.preventDefault();const b=e.submitter;b.disabled=true;
